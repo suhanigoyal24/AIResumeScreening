@@ -1,0 +1,5 @@
+db.sqlite3
+media/
+ats_checker/analyzer/test_data/
+*.pdf
+*.docx
