@@ -1,9 +1,5 @@
 🤖 AI-Based Resume Screening & Job Description Matching System
 
-Major Project | Department of Computer Science & Applications (CSA)
-ITM University | Submitted to Dr. Keerti Shrivastava, Assistant Professor
-
----
 
 📌 Project Overview
 
@@ -113,12 +109,3 @@ This system is built for **HR professionals and recruitment teams** who need to:
 -📥 Resume improvement suggestions & download
 -🌐 Cloud deployment (AWS / Render)
 -📧 Automated candidate shortlisting emails
-
----
-
-📚 Academic Submission
-Project Type : Major Project
-Submitted To : Dr. Keerti Shrivastava, Assistant Professor 
-Department : Computer Science & Applications (CSA) 
-University : ITM University
-Submitted By : Suhani Goyal
