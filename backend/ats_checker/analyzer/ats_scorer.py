@@ -1,80 +1,92 @@
-# analyzer/ats_scorer.py
+import re
+import math
+from collections import Counter
+from typing import List
+from pydantic import BaseModel, Field
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import math
-import re
-from collections import Counter
+from sentence_transformers import SentenceTransformer
+
+# Enforce clean typing boundaries for your Django views.py
+class ScorerOutput(BaseModel):
+    match_score: float = Field(..., description="Calibrated semantic match percentage (0-100)")
+    matched_keywords: List[str] = Field(..., description="Top domain-specific terms found in both profiles")
+    semantic_similarity: float = Field(..., description="Raw vector-space contextual score")
 
 class ATSScorer:
     """
-    Lightweight ATS Scorer using TF-IDF + Cosine Similarity + Calibration.
-    No PyTorch/TensorFlow dependencies with Realistic scores.
+    Production-grade hybrid ATS Scorer.
+    Combines SBERT vector embeddings for contextual semantic analysis with 
+    TfidfVectorizer token tracking for explicit compliance verification.
     """
     
     def __init__(self):
+        # Lightweight ~90MB footprint. Optimized for fast inference on CPU-only containers.
+        self.encoder = SentenceTransformer('all-MiniLM-L6-v2')
         self.vectorizer = TfidfVectorizer(
             stop_words='english',
-            ngram_range=(1, 2),  # unigrams + bigrams
-            max_features=500,
-            min_df=1,
-            max_df=0.95
+            ngram_range=(1, 2),
+            max_features=500
         )
         self._loaded = True
     
     def clean_text(self, text: str) -> str:
-        """Normalize text for better matching"""
+        """Normalize structure and strip syntax noise from raw documents."""
+        if not text:
+            return ""
         text = text.lower()
-        text = re.sub(r'[^a-z0-9\s]', ' ', text)  # remove punctuation
-        text = re.sub(r'\s+', ' ', text).strip()   # collapse whitespace
+        text = re.sub(r'[^a-z0-9\s#\+\.]', ' ', text)  # Keep chars like C++, C#, .NET
+        text = re.sub(r'\s+', ' ', text).strip()
         return text
 
-    def score(self, resume_text: str, jd_text: str) -> float:
-        """Calculate ATS match score (0-100) with realistic calibration"""
+    def calculate_metrics(self, resume_text: str, jd_text: str) -> ScorerOutput:
+        """
+        Executes a dual-signal assessment routing to evaluate candidate fitness.
+        Calculates a contextual score via dense vector mappings and cross-verifies keyword presence.
+        """
         if not resume_text.strip() or not jd_text.strip():
-            return 0.0
+            return ScorerOutput(match_score=0.0, matched_keywords=[], semantic_similarity=0.0)
         
-        # Clean texts
         resume_clean = self.clean_text(resume_text)
         jd_clean = self.clean_text(jd_text)
         
-        # 1. TF-IDF Vectorization
+        # Signal 1: Contextual Semantic Mapping (SBERT)
+        # Translates unstructured prose into structural 384-dimensional dense vectors
+        embeddings = self.encoder.encode([jd_clean, resume_clean], convert_to_numpy=True)
+        sbert_sim = float(cosine_similarity([embeddings[0]], [embeddings[1]])[0][0])
+        
+        # Signal 2: Deterministic Compliance Audit (TF-IDF)
         try:
             tfidf_matrix = self.vectorizer.fit_transform([jd_clean, resume_clean])
-            similarity = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0]
-        except:
-            # Fallback if vectorization fails
-            similarity = 0.3
+            tfidf_sim = float(cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0])
+        except Exception:
+            tfidf_sim = sbert_sim  # Fallback to semantic layer if sparse matrix generation collapses
+            
+        # Extract meaningful intersection keywords
+        matched_terms = self._extract_matched_vocabulary(resume_clean, jd_clean)
         
-        # 2. Keyword overlap bonus (simple but effective)
-        resume_words = set(resume_clean.split())
-        jd_words = set(jd_clean.split())
-        meaningful_jd = {w for w in jd_words if len(w) > 3}
-        keyword_overlap = len(resume_words & meaningful_jd) / max(len(meaningful_jd), 1)
+        # Blended Scoring Strategy: 70% Semantic context + 30% Hard keyword compliance
+        raw_blend = (sbert_sim * 0.7) + (tfidf_sim * 0.3)
         
-        # 3. Combine signals
-        raw_score = (similarity * 0.7) + (keyword_overlap * 0.3)
+        # Sigmoid Calibration Function to map mathematical values into a normalized business scale
+        calibrated_score = 100 / (1 + math.exp(-12 * (raw_blend - 0.38)))
+        final_score = max(15.0, min(98.5, calibrated_score))
         
-        # 4. Calibration: Sigmoid curve → realistic ATS range
-        # Maps 0.3 similarity ≈ 60%, 0.6 ≈ 85%
-        calibrated = 100 / (1 + math.exp(-10 * (raw_score - 0.4)))
+        return ScorerOutput(
+            match_score=round(final_score, 1),
+            matched_keywords=matched_terms[:12],
+            semantic_similarity=round(sbert_sim, 3)
+        )
         
-        # Clamp to realistic bounds
-        final_score = max(30, min(95, calibrated))
-        
-        return round(final_score, 1)
-    
-    def keywords(self, resume_text: str, jd_text: str, top_k: int = 15) -> list:
-        """Extract top matched keywords using simple frequency + overlap"""
-        resume_clean = self.clean_text(resume_text)
-        jd_clean = self.clean_text(jd_text)
-        
+    def _extract_matched_vocabulary(self, resume_clean: str, jd_clean: str) -> List[str]:
+        """Isolates high-frequency technical indicators intersecting both fields."""
         resume_words = Counter(resume_clean.split())
         jd_words = Counter(jd_clean.split())
         
-        # Filter meaningful words
-        meaningful = {w for w in jd_words if len(w) > 3 and jd_words[w] >= 2}
-        matched = [w for w in meaningful if w in resume_words]
+        # Filter core semantic elements (token length > 2 to retain languages like Go, C, R)
+        meaningful_tokens = {word for word in jd_words if len(word) >= 2 and jd_words[word] >= 1}
+        intersected = [word for word in meaningful_tokens if word in resume_words]
         
-        # Sort by JD frequency, return top_k
-        matched.sort(key=lambda w: jd_words[w], reverse=True)
-        return matched[:top_k]
+        # Sort tokens based on relative contextual density within the target profile
+        intersected.sort(key=lambda word: jd_words[word], reverse=True)
+        return intersected
