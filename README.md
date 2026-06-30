@@ -49,7 +49,7 @@ An automated Django-based system that:
 - 📂 Bulk resume upload — up to **20 resumes at once**
 - 📄 Multi-format support — PDF, DOCX, TXT
 - 🧠 AI/NLP-based resume parsing & skill extraction
-- 📊 Hybrid **SBERT + TF-IDF** candidate ranking
+- 📊 **TF-IDF + Cosine Similarity** based candidate ranking with sigmoid score calibration
 - 🔍 Job description matching & keyword analysis
 - 🗃️ Secure SQL storage with audit trail
 - ⚡ Clean, responsive HR dashboard
@@ -61,8 +61,8 @@ An automated Django-based system that:
 | Layer      | Technologies                              |
 |------------|-------------------------------------------|
 | Backend    | Python, Django, Django REST Framework     |
-| AI / NLP   | SBERT, TF-IDF, spaCy / NLTK               |
-| Database   | SQLite (with audit trail)                 |
+| AI / NLP   | TF-IDF, Cosine Similarity, spaCy / NLTK   |
+| Database   | MySQL                                     |
 | API        | REST APIs                                 |
 
 ---
