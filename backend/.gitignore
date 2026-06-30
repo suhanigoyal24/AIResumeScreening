@@ -1,5 +1,17 @@
+# Environment & secrets
+.env
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Django
 db.sqlite3
 media/
+staticfiles/
+
+# Project-specific
 ats_checker/analyzer/test_data/
 *.pdf
 *.docx
