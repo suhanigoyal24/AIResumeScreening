@@ -60,7 +60,7 @@ An automated Django-based system that:
 
 | Layer      | Technologies                              |
 |------------|-------------------------------------------|
-| Frontend   | React (Vite), Tailwind CSS, TypeScript    |
+| Frontend   | React (Basics)    |
 | Backend    | Python, Django, Django REST Framework     |
 | AI / NLP   | SBERT, TF-IDF, spaCy / NLTK               |
 | Database   | SQLite (with audit trail)                 |
@@ -71,7 +71,7 @@ An automated Django-based system that:
 📂 Project Structure
 MajorProject_AIResumeScreening_SuhaniGoyal/
 │
-├── frontend/        # React (Vite) frontend
+├── frontend/        # React(Basics) frontend
 ├── backend/         # Django backend
 └── README.md
 
