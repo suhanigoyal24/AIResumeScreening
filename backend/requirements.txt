@@ -24,3 +24,5 @@ dj-database-url>=2.0
 PyMySQL>=1.1
 
 python-dotenv
+mysqlclient
+gunicorn
