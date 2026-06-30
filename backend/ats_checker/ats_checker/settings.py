@@ -2,7 +2,6 @@ from pathlib import Path
 import os
 import dj_database_url
 from dotenv import load_dotenv
-
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -57,11 +56,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ats_checker.wsgi.application'
 
-# DATABASE — PostgreSQL on Neon (falls back to SQLite locally)
-DATABASE_URL = os.environ.get('DATABASE_URL')
-if DATABASE_URL:
+# DATABASE 
+# DATABASE_URL block ko poora hata do, ye naya likho:
+
+DB_ENGINE = os.environ.get('DB_ENGINE')
+
+if DB_ENGINE:
     DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+        'default': {
+            'ENGINE': DB_ENGINE,
+            'NAME': os.environ.get('DB_NAME'),
+            'USER': os.environ.get('DB_USER'),
+            'PASSWORD': os.environ.get('DB_PASSWORD'),
+            'HOST': os.environ.get('DB_HOST'),
+            'PORT': os.environ.get('DB_PORT'),
+            'OPTIONS': {
+                'ssl': {
+                    'ca': os.environ.get('DB_SSL_CA')
+                }
+            }
+        }
     }
 else:
     DATABASES = {
