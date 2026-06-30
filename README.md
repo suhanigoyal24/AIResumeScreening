@@ -60,7 +60,6 @@ An automated Django-based system that:
 
 | Layer      | Technologies                              |
 |------------|-------------------------------------------|
-| Frontend   | React (Basics)    |
 | Backend    | Python, Django, Django REST Framework     |
 | AI / NLP   | SBERT, TF-IDF, spaCy / NLTK               |
 | Database   | SQLite (with audit trail)                 |
