@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATS Checker — Login</title>
+<style>
+  :root{
+    --blue:#2563eb;
+    --blue-dark:#1e40af;
+    --blue-pale:#eff4ff;
+    --ink:#111111;
+    --white:#ffffff;
+    --error:#c0392b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:var(--blue-pale);
+    font-family:'Courier New', monospace;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .card{
+    width:100%;
+    max-width:420px;
+    background:var(--white);
+    border:3px solid var(--blue);
+    box-shadow:8px 8px 0 var(--blue);
+    padding:32px;
+  }
+  .tabs{
+    display:flex;
+    border:2px solid var(--blue);
+    margin-bottom:24px;
+  }
+  .tab{
+    flex:1;
+    text-align:center;
+    padding:10px;
+    cursor:pointer;
+    font-weight:bold;
+    background:var(--white);
+    border:none;
+    font-family:inherit;
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--blue-dark);
+  }
+  .tab.active{
+    background:var(--blue);
+    color:var(--white);
+  }
+  .tab:first-child{
+    border-right:2px solid var(--blue);
+  }
+  h1{
+    font-size:22px;
+    margin:0 0 4px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+  }
+  .subtitle{
+    font-size:13px;
+    color:#555;
+    margin:0 0 24px;
+  }
+  label{
+    display:block;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-bottom:6px;
+    margin-top:16px;
+    font-weight:bold;
+  }
+  input{
+    width:100%;
+    padding:10px 12px;
+    border:2px solid var(--ink);
+    font-family:inherit;
+    font-size:14px;
+    background:var(--white);
+  }
+  input:focus{
+    outline:3px solid var(--blue);
+    outline-offset:-1px;
+  }
+  button.submit{
+    width:100%;
+    margin-top:24px;
+    padding:12px;
+    background:var(--blue);
+    color:var(--white);
+    border:2px solid var(--blue);
+    font-family:inherit;
+    font-weight:bold;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    cursor:pointer;
+    font-size:14px;
+  }
+  button.submit:hover{
+    background:var(--blue-dark);
+    border-color:var(--blue-dark);
+  }
+  button.submit:disabled{
+    opacity:0.5;
+    cursor:not-allowed;
+  }
+  .msg{
+    margin-top:16px;
+    padding:10px 12px;
+    font-size:13px;
+    border:2px solid var(--ink);
+    display:none;
+  }
+  .msg.error{
+    display:block;
+    background:#fbe4e1;
+    color:var(--error);
+    border-color:var(--error);
+  }
+  .msg.success{
+    display:block;
+    background:var(--blue-pale);
+    color:var(--blue-dark);
+    border-color:var(--blue);
+  }
+  .field-hidden{
+    display:none;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="tabs">
+    <button class="tab active" id="loginTab" onclick="switchTab('login')">Login</button>
+    <button class="tab" id="signupTab" onclick="switchTab('signup')">Sign Up</button>
+  </div>
+
+  <h1 id="formTitle">Welcome back</h1>
+  <p class="subtitle" id="formSubtitle">Log in to check your resume score.</p>
+
+  <form id="authForm">
+    <div id="emailField" class="field-hidden">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="you@example.com">
+    </div>
+
+    <label for="username">Username</label>
+    <input type="text" id="username" required placeholder="your_username">
+
+    <label for="password">Password</label>
+    <input type="password" id="password" required placeholder="••••••••">
+
+    <button type="submit" class="submit" id="submitBtn">Log In</button>
+
+    <div class="msg" id="msgBox"></div>
+  </form>
+</div>
+
+<script>
+  const API_BASE = "https://YOUR-BACKEND-URL/api/auth"; // replace with your live backend URL
+
+  let mode = "login";
+
+  function switchTab(newMode){
+    mode = newMode;
+    const loginTab = document.getElementById("loginTab");
+    const signupTab = document.getElementById("signupTab");
+    const emailField = document.getElementById("emailField");
+    const title = document.getElementById("formTitle");
+    const subtitle = document.getElementById("formSubtitle");
+    const submitBtn = document.getElementById("submitBtn");
+    const msgBox = document.getElementById("msgBox");
+
+    msgBox.className = "msg";
+    msgBox.textContent = "";
+
+    if(newMode === "login"){
+      loginTab.classList.add("active");
+      signupTab.classList.remove("active");
+      emailField.classList.add("field-hidden");
+      title.textContent = "Welcome back";
+      subtitle.textContent = "Log in to check your resume score.";
+      submitBtn.textContent = "Log In";
+    } else {
+      signupTab.classList.add("active");
+      loginTab.classList.remove("active");
+      emailField.classList.remove("field-hidden");
+      title.textContent = "Create account";
+      subtitle.textContent = "Sign up to start screening resumes.";
+      submitBtn.textContent = "Sign Up";
+    }
+  }
+
+  document.getElementById("authForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const msgBox = document.getElementById("msgBox");
+    const submitBtn = document.getElementById("submitBtn");
+
+    msgBox.className = "msg";
+    msgBox.textContent = "";
+
+    if(!username || !password){
+      msgBox.className = "msg error";
+      msgBox.textContent = "Username and password are required.";
+      return;
+    }
+
+    const endpoint = mode === "login" ? "/login/" : "/register/";
+    const payload = mode === "login"
+      ? { username, password }
+      : { username, password, email };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Please wait...";
+
+    try {
+      const res = await fetch(API_BASE + endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+
+      if(!res.ok){
+        msgBox.className = "msg error";
+        msgBox.textContent = data.error || "Something went wrong. Try again.";
+        submitBtn.disabled = false;
+        submitBtn.textContent = mode === "login" ? "Log In" : "Sign Up";
+        return;
+      }
+
+      // Store JWT tokens
+      localStorage.setItem("access_token", data.access);
+      localStorage.setItem("refresh_token", data.refresh);
+      localStorage.setItem("username", data.username);
+
+      msgBox.className = "msg success";
+      msgBox.textContent = mode === "login" ? "Login successful! Redirecting..." : "Account created! Redirecting...";
+
+      setTimeout(() => {
+        window.location.href = "index.html"; // change to your dashboard/upload page
+      }, 1000);
+
+    } catch(err){
+      msgBox.className = "msg error";
+      msgBox.textContent = "Network error. Check your connection and try again.";
+      submitBtn.disabled = false;
+      submitBtn.textContent = mode === "login" ? "Log In" : "Sign Up";
+    }
+  });
+</script>
+
+</body>
+</html>
