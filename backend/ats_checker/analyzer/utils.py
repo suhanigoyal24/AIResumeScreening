@@ -154,34 +154,34 @@ def _generate_strengths(matched_skills: list, similarity: float) -> list:
     strengths = []
     if matched_skills:
         top_skills = matched_skills[:3]
-        strengths.append(f"✅ Strong alignment in: {', '.join(top_skills)}")
+        strengths.append(f"Strong alignment in: {', '.join(top_skills)}")
     if similarity > 0.7:
-        strengths.append("✅ Resume language closely matches job description")
-    return strengths if strengths else ["✅ No major red flags detected"]
+        strengths.append("Resume language closely matches job description")
+    return strengths if strengths else ["No major red flags detected"]
 
 def _generate_weaknesses(missing_skills: list, exp_score: float, edu_score: float) -> list:
     weaknesses = []
     if missing_skills:
-        weaknesses.append(f"⚠️ Missing key skills: {', '.join(missing_skills[:3])}")
+        weaknesses.append(f"Missing key skills: {', '.join(missing_skills[:3])}")
     if exp_score < 0.4:
-        weaknesses.append("⚠️ Limited evidence of required experience level")
+        weaknesses.append("Limited evidence of required experience level")
     if edu_score < 0.4:
-        weaknesses.append("⚠️ Education background may not fully align")
-    return weaknesses if weaknesses else ["✅ Well-rounded candidate profile"]
+        weaknesses.append("Education background may not fully align")
+    return weaknesses if weaknesses else ["Well-rounded candidate profile"]
 
 def _generate_recommendations(missing_skills: list, exp_score: float, edu_score: float) -> list:
     recs = []
     if missing_skills:
-        recs.append(f"💡 Consider highlighting projects using: {', '.join(missing_skills[:2])}")
+        recs.append(f"Consider highlighting projects using: {', '.join(missing_skills[:2])}")
     if exp_score < 0.5:
-        recs.append("💡 Quantify achievements with metrics to demonstrate impact")
+        recs.append("Quantify achievements with metrics to demonstrate impact")
     if edu_score < 0.5:
-        recs.append("💡 Add relevant certifications or courses to strengthen profile")
+        recs.append("Add relevant certifications or courses to strengthen profile")
     if not recs:
-        recs.append("💡 Tailor resume to emphasize matched keywords from job description")
+        recs.append("Tailor resume to emphasize matched keywords from job description")
     return recs
 
-# ✅ Explicit exports - prevents circular import issues
+# Explicit exports - prevents circular import issues
 __all__ = [
     'nlp',
     'STOPWORDS', 

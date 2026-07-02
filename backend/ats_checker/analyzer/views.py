@@ -26,13 +26,13 @@ from django.apps import apps
 try:
     from .ml_engine.ml_predictor import ATSMLPredictor
     ml_predictor = ATSMLPredictor()
-    print("✅ ML Predictor loaded successfully")
+    print("ML Predictor loaded successfully")
 except FileNotFoundError as e:
     ml_predictor = None
-    print(f"⚠️ ML model file not found: {e}. Using traditional scoring fallback.")
+    print(f"ML model file not found: {e}. Using traditional scoring fallback.")
 except Exception as e:
     ml_predictor = None
-    print(f"⚠️ ML Predictor initialization failed: {e}. Using traditional scoring fallback.")
+    print(f"ML Predictor initialization failed: {e}. Using traditional scoring fallback.")
 
 
 # ============================================================================
@@ -107,9 +107,9 @@ def upload_resume(request):
         return Response({"error": "Method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
     # === GET INPUTS ===
-    resumes = request.FILES.getlist('resumes')  # ✅ Multiple files
-    job_description_text = request.data.get('job_description', '').strip()  # ✅ Text JD
-    jd_file = request.FILES.get('jd_file')  # ✅ File JD (optional)
+    resumes = request.FILES.getlist('resumes')  # Multiple files
+    job_description_text = request.data.get('job_description', '').strip()  # Text JD
+    jd_file = request.FILES.get('jd_file')  # File JD (optional)
     session_id = request.data.get('session_id', f"session_{timezone.now().timestamp()}")
     
     # === VALIDATION ===
@@ -223,7 +223,7 @@ def upload_resume(request):
                     final_score = round(ml_score * 0.85 + base_result['score'] * 0.15, 1)
                     print(f"[INFO] ML Score: {ml_score}, Final (blended): {final_score}")
                 except Exception as ml_error:
-                    print(f"⚠️ ML prediction failed for {resume.name}: {ml_error}")
+                    print(f"ML prediction failed for {resume.name}: {ml_error}")
                     final_score = base_result['score']
             else:
                 final_score = base_result['score']
@@ -253,7 +253,7 @@ def upload_resume(request):
                 resume_file=file_path,
                 extracted_text=resume_text[:5000],
                 extracted_skills=resume_skills,
-                session_id=session_id  # ✅ Store session for grouping
+                session_id=session_id  # Store session for grouping
             )
             
             # Save match score
@@ -597,7 +597,7 @@ def dashboard_history(request):
         
     except Exception as e:
         import traceback
-        print(f"[❌ ERROR in dashboard_history] {e}")
+        print(f"[ERROR in dashboard_history] {e}")
         print(traceback.format_exc())
         return Response({"error": "Internal server error", "details": str(e)}, status=500)
 
@@ -664,7 +664,7 @@ def ml_analyze(request):
 
     except Exception as e:
         print(f"\n{'='*60}")
-        print(f"❌ [ML_ANALYZE CRASH] {type(e).__name__}: {str(e)}")
+        print(f"[ML_ANALYZE CRASH] {type(e).__name__}: {str(e)}")
         print(f"{'='*60}")
         print(traceback.format_exc())
         print(f"{'='*60}\n")
