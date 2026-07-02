@@ -1,13 +1,202 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ai-resume-frontend</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Resume Screening API</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9fafb; color: #111827; line-height: 1.6; }
+    .header { background: #111827; color: white; padding: 48px 24px; text-align: center; }
+    .header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+    .header p { color: #9ca3af; font-size: 1rem; max-width: 600px; margin: 0 auto; }
+    .badge { display: inline-block; background: #1d4ed8; color: white; font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; margin: 16px 4px 0; }
+    .badge.green { background: #15803d; }
+    .badge.purple { background: #7c3aed; }
+    .container { max-width: 860px; margin: 0 auto; padding: 40px 24px; }
+    .section { margin-bottom: 40px; }
+    .section h2 { font-size: 1.1rem; font-weight: 600; color: #374151; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
+    .endpoint { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-bottom: 12px; }
+    .endpoint-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .method { font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+    .method.post { background: #fef3c7; color: #92400e; }
+    .method.get { background: #dbeafe; color: #1e40af; }
+    .endpoint-path { font-family: monospace; font-size: 0.9rem; font-weight: 600; color: #111827; }
+    .endpoint p { font-size: 0.875rem; color: #6b7280; margin-bottom: 10px; }
+    .auth-tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; background: #fee2e2; color: #991b1b; }
+    .auth-tag.open { background: #d1fae5; color: #065f46; }
+    pre { background: #1f2937; color: #f3f4f6; padding: 16px; border-radius: 6px; font-size: 0.8rem; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
+    .links { display: flex; gap: 12px; flex-wrap: wrap; }
+    .link-btn { display: inline-block; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-size: 0.875rem; font-weight: 500; }
+    .link-btn.dark { background: #111827; color: white; }
+    .link-btn.outline { background: white; color: #111827; border: 1px solid #d1d5db; }
+    .link-btn:hover { opacity: 0.85; }
+    .stack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+    .stack-item { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; }
+    .stack-item .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #9ca3af; margin-bottom: 4px; }
+    .stack-item .value { font-size: 0.875rem; font-weight: 500; color: #111827; }
+    footer { text-align: center; padding: 32px 24px; color: #9ca3af; font-size: 0.8rem; border-top: 1px solid #e5e7eb; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>AI Resume Screening API</h1>
+  <p>NLP pipeline that scores resumes against job descriptions using TF-IDF, cosine similarity, and skill extraction — cutting manual screening time by ~70%.</p>
+  <span class="badge">Django REST Framework</span>
+  <span class="badge green">MySQL</span>
+  <span class="badge purple">JWT Auth</span>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <h2>Links</h2>
+    <div class="links">
+      <a class="link-btn dark" href="https://github.com/suhanigoyal24/AIResumeScreening" target="_blank">GitHub Repository</a>
+      <a class="link-btn outline" href="https://gsuhani17-ats-checker-backend.hf.space/api/candidates/" target="_blank">Live API</a>
+      <a class="link-btn outline" href="https://youtu.be/ut_Auyn0wTo?si=FzdEyAYAyhyReFya" target="_blank">Demo Video</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Tech Stack</h2>
+    <div class="stack-grid">
+      <div class="stack-item"><div class="label">Language</div><div class="value">Python 3.12</div></div>
+      <div class="stack-item"><div class="label">Framework</div><div class="value">Django + DRF</div></div>
+      <div class="stack-item"><div class="label">Database</div><div class="value">MySQL (TiDB Cloud)</div></div>
+      <div class="stack-item"><div class="label">Auth</div><div class="value">JWT (SimpleJWT)</div></div>
+      <div class="stack-item"><div class="label">NLP</div><div class="value">spaCy + NLTK</div></div>
+      <div class="stack-item"><div class="label">ML</div><div class="value">TF-IDF + Cosine Similarity</div></div>
+      <div class="stack-item"><div class="label">Hosting</div><div class="value">Hugging Face Spaces</div></div>
+      <div class="stack-item"><div class="label">File Support</div><div class="value">PDF, DOCX, TXT</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Authentication Endpoints</h2>
+
+    <div class="endpoint">
+      <div class="endpoint-header">
+        <span class="method post">POST</span>
+        <span class="endpoint-path">/api/auth/register/</span>
+        <span class="auth-tag open">Public</span>
+      </div>
+      <p>Register a new user account. Returns JWT access and refresh tokens.</p>
+      <pre>curl -X POST https://gsuhani17-ats-checker-backend.hf.space/api/auth/register/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "hrmanager", "password": "yourpassword", "email": "hr@company.com"}'</pre>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header">
+        <span class="method post">POST</span>
+        <span class="endpoint-path">/api/auth/login/</span>
+        <span class="auth-tag open">Public</span>
+      </div>
+      <p>Login with existing credentials. Returns access token (1 hour) and refresh token (7 days).</p>
+      <pre>curl -X POST https://gsuhani17-ats-checker-backend.hf.space/api/auth/login/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "hrmanager", "password": "yourpassword"}'</pre>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header">
+        <span class="method post">POST</span>
+        <span class="endpoint-path">/api/auth/refresh/</span>
+        <span class="auth-tag open">Public</span>
+      </div>
+      <p>Get a new access token using your refresh token.</p>
+      <pre>curl -X POST https://gsuhani17-ats-checker-backend.hf.space/api/auth/refresh/ \
+  -H "Content-Type: application/json" \
+  -d '{"refresh": "your_refresh_token"}'</pre>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Resume Screening Endpoints</h2>
+
+    <div class="endpoint">
+      <div class="endpoint-header">
+        <span class="method post">POST</span>
+        <span class="endpoint-path">/api/upload/</span>
+        <span class="auth-tag">Requires JWT</span>
+      </div>
+      <p>Upload up to 20 resumes (PDF/DOCX) against a job description. Returns ranked scores, matched keywords, and recommendations.</p>
+      <pre>curl -X POST https://gsuhani17-ats-checker-backend.hf.space/api/upload/ \
+  -H "Authorization: Bearer your_access_token" \
+  -F "resumes=@resume1.pdf" \
+  -F "resumes=@resume2.pdf" \
+  -F "job_description=We are looking for a Python backend developer..."</pre>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header">
+        <span class="method get">GET</span>
+        <span class="endpoint-path">/api/candidates/</span>
+        <span class="auth-tag">Requires JWT</span>
+      </div>
+      <p>List all candidates with their scores and extracted skills.</p>
+      <pre>curl https://gsuhani17-ats-checker-backend.hf.space/api/candidates/ \
+  -H "Authorization: Bearer your_access_token"</pre>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header">
+        <span class="method get">GET</span>
+        <span class="endpoint-path">/api/dashboard/</span>
+        <span class="auth-tag">Requires JWT</span>
+      </div>
+      <p>Dashboard summary with pass rates, average scores, and candidate comparison. Filter by minimum score using <code>?min_score=60</code>.</p>
+      <pre>curl "https://gsuhani17-ats-checker-backend.hf.space/api/dashboard/?min_score=60" \
+  -H "Authorization: Bearer your_access_token"</pre>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header">
+        <span class="method get">GET</span>
+        <span class="endpoint-path">/api/dashboard/history/</span>
+        <span class="auth-tag">Requires JWT</span>
+      </div>
+      <p>Paginated full history of all uploads. Supports <code>?page=1&search=python&min_score=70</code>.</p>
+      <pre>curl "https://gsuhani17-ats-checker-backend.hf.space/api/dashboard/history/?page=1" \
+  -H "Authorization: Bearer your_access_token"</pre>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header">
+        <span class="method post">POST</span>
+        <span class="endpoint-path">/api/ml-analyze/</span>
+        <span class="auth-tag">Requires JWT</span>
+      </div>
+      <p>Standalone ML analysis for a single resume against a job description.</p>
+      <pre>curl -X POST https://gsuhani17-ats-checker-backend.hf.space/api/ml-analyze/ \
+  -H "Authorization: Bearer your_access_token" \
+  -F "resume=@resume.pdf" \
+  -F "job_description=Looking for a Django developer with REST API experience"</pre>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>How Scoring Works</h2>
+    <div class="endpoint">
+      <p>Each resume is scored using a weighted blend of four signals:</p>
+      <pre>Final Score = 40% TF-IDF semantic similarity
+            + 30% skill overlap (Jaccard index)
+            + 20% experience keyword match
+            + 10% education keyword match
+
+Scores above 60 → Shortlist
+Scores below 60 → Review</pre>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Built by Suhani Goyal &nbsp;|&nbsp;
+  <a href="https://github.com/suhanigoyal24" style="color: #6b7280;">GitHub</a>
+</footer>
+
+</body>
 </html>
