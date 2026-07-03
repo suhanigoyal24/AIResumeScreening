@@ -7,84 +7,96 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #111827; min-height: 100vh; }
-nav { background: #111827; padding: 0 24px; height: 52px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
-nav .brand { color: #fff; font-size: 14px; font-weight: 500; }
-nav .user-info { font-size: 12px; color: #9ca3af; display: none; align-items: center; gap: 12px; }
+nav { background: #111827; padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+nav .brand { color: #fff; font-size: 16px; font-weight: 500; }
+nav .user-info { font-size: 13px; color: #9ca3af; display: none; align-items: center; gap: 14px; }
 nav .user-info span { color: #60a5fa; }
-nav .logout-btn { font-size: 12px; color: #9ca3af; border: 0.5px solid #374151; background: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; }
+nav .logout-btn { font-size: 13px; color: #9ca3af; border: 0.5px solid #374151; background: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
 nav .logout-btn:hover { color: #fff; border-color: #6b7280; }
-main { padding-top: 52px; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+main { padding-top: 60px; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
 
 /* Auth screen */
-#auth-screen { width: 100%; max-width: 400px; padding: 24px; }
-.auth-card { background: #fff; border: 0.5px solid #e5e7eb; border-radius: 12px; padding: 32px; }
-.auth-card h1 { font-size: 16px; font-weight: 500; color: #111827; margin-bottom: 4px; }
-.auth-card .subtitle { font-size: 13px; color: #6b7280; margin-bottom: 24px; }
-.tab-switcher { display: flex; border: 0.5px solid #e5e7eb; border-radius: 6px; overflow: hidden; margin-bottom: 24px; }
-.tab-switcher button { flex: 1; padding: 8px; font-size: 13px; border: none; cursor: pointer; transition: background 0.15s; }
+#auth-screen { width: 100%; max-width: 460px; padding: 32px; }
+.auth-card { background: #fff; border: 0.5px solid #e5e7eb; border-radius: 14px; padding: 40px; }
+.auth-card h1 { font-size: 19px; font-weight: 500; color: #111827; margin-bottom: 6px; }
+.auth-card .subtitle { font-size: 14px; color: #6b7280; margin-bottom: 28px; }
+.tab-switcher { display: flex; border: 0.5px solid #e5e7eb; border-radius: 8px; overflow: hidden; margin-bottom: 28px; }
+.tab-switcher button { flex: 1; padding: 11px; font-size: 14px; border: none; cursor: pointer; transition: background 0.15s; }
 .tab-switcher button.active { background: #1d4ed8; color: #fff; }
 .tab-switcher button:not(.active) { background: #fff; color: #6b7280; }
-.form-group { margin-bottom: 14px; }
-.form-group label { font-size: 12px; color: #374151; display: block; margin-bottom: 5px; }
-.form-group input { width: 100%; padding: 9px 12px; border: 0.5px solid #d1d5db; border-radius: 6px; font-size: 13px; color: #111827; outline: none; }
+.form-group { margin-bottom: 18px; }
+.form-group label { font-size: 13px; color: #374151; display: block; margin-bottom: 6px; }
+.form-group input { width: 100%; padding: 12px 14px; border: 0.5px solid #d1d5db; border-radius: 8px; font-size: 14px; color: #111827; outline: none; }
 .form-group input:focus { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.1); }
-.primary-btn { width: 100%; padding: 10px; background: #1d4ed8; color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; }
+.primary-btn { width: 100%; padding: 13px; background: #1d4ed8; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; }
 .primary-btn:hover { background: #1e40af; }
 .primary-btn:disabled { background: #93c5fd; cursor: not-allowed; }
-.error-msg { font-size: 12px; color: #dc2626; background: #fef2f2; border: 0.5px solid #fecaca; border-radius: 6px; padding: 8px 12px; margin-bottom: 14px; display: none; }
+.error-msg { font-size: 13px; color: #dc2626; background: #fef2f2; border: 0.5px solid #fecaca; border-radius: 8px; padding: 10px 14px; margin-bottom: 18px; display: none; }
 
 /* App screen */
-#app-screen { display: none; width: 100%; max-width: 860px; padding: 24px; align-items: flex-start; }
+#app-screen { display: none; width: 100%; max-width: 1100px; padding: 32px; align-items: flex-start; }
 .page { display: none; width: 100%; }
 .page.active { display: block; }
-.page-nav { display: flex; gap: 4px; background: #fff; border: 0.5px solid #e5e7eb; border-radius: 8px; padding: 4px; margin-bottom: 20px; }
-.page-nav button { flex: 1; padding: 7px 12px; font-size: 13px; border: none; border-radius: 5px; cursor: pointer; color: #6b7280; background: transparent; }
+.page-nav { display: flex; gap: 6px; background: #fff; border: 0.5px solid #e5e7eb; border-radius: 10px; padding: 6px; margin-bottom: 28px; }
+.page-nav button { flex: 1; padding: 11px 16px; font-size: 14px; border: none; border-radius: 7px; cursor: pointer; color: #6b7280; background: transparent; }
 .page-nav button.active { background: #1d4ed8; color: #fff; font-weight: 500; }
 
 /* Upload page */
-.card { background: #fff; border: 0.5px solid #e5e7eb; border-radius: 12px; padding: 24px; }
-.card h2 { font-size: 15px; font-weight: 500; color: #111827; margin-bottom: 4px; }
-.card .hint { font-size: 12px; color: #6b7280; margin-bottom: 20px; }
-textarea { width: 100%; padding: 10px 12px; border: 0.5px solid #d1d5db; border-radius: 6px; font-size: 13px; color: #111827; resize: vertical; outline: none; font-family: inherit; }
+.card { background: #fff; border: 0.5px solid #e5e7eb; border-radius: 14px; padding: 32px; }
+.card h2 { font-size: 19px; font-weight: 500; color: #111827; margin-bottom: 6px; }
+.card .hint { font-size: 13px; color: #6b7280; margin-bottom: 26px; }
+textarea { width: 100%; padding: 14px 16px; border: 0.5px solid #d1d5db; border-radius: 8px; font-size: 14px; color: #111827; resize: vertical; outline: none; font-family: inherit; }
 textarea:focus { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.1); }
-.drop-zone { border: 0.5px dashed #d1d5db; border-radius: 8px; padding: 32px; text-align: center; background: #f9fafb; cursor: pointer; margin-bottom: 16px; }
+.drop-zone { border: 0.5px dashed #d1d5db; border-radius: 10px; padding: 44px; text-align: center; background: #f9fafb; cursor: pointer; margin-bottom: 20px; }
 .drop-zone:hover { border-color: #1d4ed8; background: #eff6ff; }
-.drop-zone .icon { font-size: 28px; color: #9ca3af; margin-bottom: 8px; }
-.drop-zone p { font-size: 13px; color: #6b7280; }
+.drop-zone .icon { font-size: 34px; color: #9ca3af; margin-bottom: 10px; }
+.drop-zone p { font-size: 14px; color: #6b7280; }
 .drop-zone .browse { color: #1d4ed8; cursor: pointer; text-decoration: underline; }
-.drop-zone .formats { font-size: 11px; color: #9ca3af; margin-top: 4px; }
-.file-list { margin-bottom: 16px; display: none; }
-.file-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 12px; background: #f9fafb; border: 0.5px solid #e5e7eb; border-radius: 6px; margin-bottom: 4px; font-size: 12px; color: #374151; }
-.file-item button { background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 14px; }
+.drop-zone .formats { font-size: 12px; color: #9ca3af; margin-top: 5px; }
+.file-list { margin-bottom: 20px; display: none; }
+.file-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 14px; background: #f9fafb; border: 0.5px solid #e5e7eb; border-radius: 7px; margin-bottom: 5px; font-size: 13px; color: #374151; }
+.file-item button { background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 15px; }
 .file-item button:hover { color: #dc2626; }
-.progress-bar { height: 4px; background: #e5e7eb; border-radius: 2px; margin-bottom: 16px; display: none; }
-.progress-bar .fill { height: 100%; background: #1d4ed8; border-radius: 2px; width: 0; transition: width 0.3s; }
+.progress-bar { height: 5px; background: #e5e7eb; border-radius: 3px; margin-bottom: 20px; display: none; }
+.progress-bar .fill { height: 100%; background: #1d4ed8; border-radius: 3px; width: 0; transition: width 0.3s; }
+
+/* JD input mode toggle */
+.jd-mode-toggle { display: flex; gap: 6px; background: #f3f4f6; border-radius: 8px; padding: 4px; margin-bottom: 14px; width: fit-content; }
+.jd-mode-toggle button { padding: 7px 16px; font-size: 12px; border: none; border-radius: 6px; cursor: pointer; color: #6b7280; background: transparent; }
+.jd-mode-toggle button.active { background: #fff; color: #1d4ed8; font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+.jd-drop-zone { border: 0.5px dashed #d1d5db; border-radius: 10px; padding: 28px; text-align: center; background: #f9fafb; cursor: pointer; margin-bottom: 20px; }
+.jd-drop-zone:hover { border-color: #1d4ed8; background: #eff6ff; }
+.jd-drop-zone p { font-size: 14px; color: #6b7280; }
+.jd-drop-zone .browse { color: #1d4ed8; cursor: pointer; text-decoration: underline; }
+.jd-file-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 14px; background: #f9fafb; border: 0.5px solid #e5e7eb; border-radius: 7px; margin-bottom: 20px; font-size: 13px; color: #374151; display: none; }
+.jd-file-item button { background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 15px; }
+.jd-file-item button:hover { color: #dc2626; }
 
 /* Results page */
-.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-.stat-card { background: #fff; border: 0.5px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; }
-.stat-card .label { font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
-.stat-card .value { font-size: 22px; font-weight: 500; color: #111827; }
-.candidate-card { background: #fff; border: 0.5px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
-.avatar { width: 40px; height: 40px; border-radius: 50%; background: #dbeafe; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: #1d4ed8; flex-shrink: 0; }
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 26px; }
+.stat-card { background: #fff; border: 0.5px solid #e5e7eb; border-radius: 10px; padding: 20px 22px; }
+.stat-card .label { font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.stat-card .value { font-size: 28px; font-weight: 500; color: #111827; }
+.candidate-card { background: #fff; border: 0.5px solid #e5e7eb; border-radius: 10px; padding: 18px 20px; display: flex; align-items: center; gap: 18px; margin-bottom: 10px; }
+.avatar { width: 50px; height: 50px; border-radius: 50%; background: #dbeafe; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 500; color: #1d4ed8; flex-shrink: 0; }
 .avatar.gray { background: #f3f4f6; color: #6b7280; }
 .candidate-info { flex: 1; min-width: 0; }
-.candidate-name { font-size: 13px; font-weight: 500; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.candidate-skills { font-size: 11px; color: #9ca3af; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.candidate-name { font-size: 15px; font-weight: 500; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.candidate-skills { font-size: 12px; color: #9ca3af; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .candidate-score { text-align: right; flex-shrink: 0; }
-.score-num { font-size: 20px; font-weight: 500; }
+.score-num { font-size: 24px; font-weight: 500; }
 .score-num.high { color: #1d4ed8; }
 .score-num.low { color: #6b7280; }
-.badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; margin-top: 3px; display: inline-block; }
+.badge { font-size: 12px; padding: 3px 10px; border-radius: 999px; margin-top: 4px; display: inline-block; }
 .badge.shortlist { background: #dbeafe; color: #1d4ed8; }
 .badge.review { background: #f3f4f6; color: #6b7280; border: 0.5px solid #e5e7eb; }
-.empty-state { text-align: center; padding: 48px 24px; color: #9ca3af; font-size: 13px; }
-.empty-state p { margin-top: 8px; }
-.section-label { font-size: 12px; font-weight: 500; color: #374151; margin-bottom: 10px; }
-.filter-row { display: flex; gap: 8px; margin-bottom: 16px; align-items: center; }
-.filter-row input { padding: 7px 12px; border: 0.5px solid #d1d5db; border-radius: 6px; font-size: 12px; color: #111827; outline: none; flex: 1; }
+.empty-state { text-align: center; padding: 60px 24px; color: #9ca3af; font-size: 14px; }
+.empty-state p { margin-top: 10px; }
+.section-label { font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 12px; }
+.filter-row { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; }
+.filter-row input { padding: 10px 14px; border: 0.5px solid #d1d5db; border-radius: 8px; font-size: 13px; color: #111827; outline: none; flex: 1; }
 .filter-row input:focus { border-color: #1d4ed8; }
-.filter-row select { padding: 7px 12px; border: 0.5px solid #d1d5db; border-radius: 6px; font-size: 12px; color: #111827; outline: none; background: #fff; }
+.filter-row select { padding: 10px 14px; border: 0.5px solid #d1d5db; border-radius: 8px; font-size: 13px; color: #111827; outline: none; background: #fff; }
 </style>
 </head>
 <body>
@@ -142,8 +154,8 @@ textarea:focus { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.1
   </div>
 </main>
 
-<main id="main-app" style="display:none; align-items: flex-start; justify-content: center; padding: 24px;">
-  <div style="width: 100%; max-width: 860px;">
+<main id="main-app" class="app-main" style="display:none; align-items: flex-start; justify-content: center;">
+  <div style="width: 100%; max-width: 1100px; padding: 40px 32px 32px;">
     <div class="page-nav">
       <button class="active" onclick="showPage('upload')">Upload</button>
       <button onclick="showPage('results')">Results</button>
@@ -153,15 +165,37 @@ textarea:focus { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.1
     <div class="page active" id="page-upload">
       <div class="card">
         <h2>Screen resumes</h2>
-        <p class="hint">Upload up to 20 resumes and paste a job description to get ranked scores.</p>
+        <p class="hint">Upload up to 20 resumes and provide a job description to get ranked scores.</p>
 
-        <div class="form-group" style="margin-bottom: 16px;">
-          <label style="font-size: 12px; color: #374151; display: block; margin-bottom: 5px;">Job description</label>
-          <textarea id="jd-text" rows="5" placeholder="Paste the full job description here..."></textarea>
+        <div class="form-group" style="margin-bottom: 10px;">
+          <label>Job description</label>
         </div>
 
-        <div class="form-group" style="margin-bottom: 6px;">
-          <label style="font-size: 12px; color: #374151; display: block; margin-bottom: 5px;">Resumes</label>
+        <div class="jd-mode-toggle">
+          <button class="active" id="jd-mode-text" onclick="setJdMode('text')">Paste text</button>
+          <button id="jd-mode-file" onclick="setJdMode('file')">Upload file</button>
+        </div>
+
+        <div id="jd-text-wrap">
+          <div class="form-group" style="margin-bottom: 16px;">
+            <textarea id="jd-text" rows="6" placeholder="Paste the full job description here..."></textarea>
+          </div>
+        </div>
+
+        <div id="jd-file-wrap" style="display:none;">
+          <div class="jd-drop-zone" onclick="document.getElementById('jd-file-input').click()" id="jd-drop-zone">
+            <p>Drop a JD file here or <span class="browse">browse</span></p>
+            <p class="formats" style="font-size:12px;color:#9ca3af;margin-top:5px;">PDF and DOCX supported</p>
+          </div>
+          <input type="file" id="jd-file-input" accept=".pdf,.docx,.doc" style="display:none" onchange="setJdFile(this.files[0])" />
+          <div class="jd-file-item" id="jd-file-item">
+            <span id="jd-file-name"></span>
+            <button onclick="clearJdFile()">&#x2715;</button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 8px;">
+          <label>Resumes</label>
         </div>
 
         <div class="drop-zone" onclick="document.getElementById('file-input').click()" id="drop-zone">
@@ -187,7 +221,7 @@ textarea:focus { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.1
     <div class="page" id="page-results">
       <div id="results-empty" class="card">
         <div class="empty-state">
-          <div style="font-size: 32px; color: #d1d5db;">&#9776;</div>
+          <div style="font-size: 38px; color: #d1d5db;">&#9776;</div>
           <p>No results yet. Upload resumes to get started.</p>
         </div>
       </div>
@@ -214,6 +248,8 @@ var token = '';
 var username = '';
 var selectedFiles = [];
 var allCandidates = [];
+var jdMode = 'text';
+var jdFile = null;
 
 function switchAuthTab(tab) {
   document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
@@ -291,7 +327,7 @@ function enterApp() {
 }
 
 function logout() {
-  token = ''; username = ''; selectedFiles = []; allCandidates = [];
+  token = ''; username = ''; selectedFiles = []; allCandidates = []; jdFile = null;
   document.getElementById('main-auth').style.display = 'flex';
   document.getElementById('main-app').style.display = 'none';
   document.getElementById('nav-user').style.display = 'none';
@@ -306,6 +342,29 @@ function showPage(name) {
     b.className = (i === (name === 'upload' ? 0 : 1)) ? 'active' : '';
   });
   document.getElementById('page-' + name).className = 'page active';
+}
+
+function setJdMode(mode) {
+  jdMode = mode;
+  document.getElementById('jd-mode-text').className = mode === 'text' ? 'active' : '';
+  document.getElementById('jd-mode-file').className = mode === 'file' ? 'active' : '';
+  document.getElementById('jd-text-wrap').style.display = mode === 'text' ? 'block' : 'none';
+  document.getElementById('jd-file-wrap').style.display = mode === 'file' ? 'block' : 'none';
+}
+
+function setJdFile(file) {
+  if (!file) return;
+  var ext = file.name.split('.').pop().toLowerCase();
+  if (['pdf','docx','doc'].indexOf(ext) === -1) { showError('upload-error', 'Job description file must be PDF or DOCX.'); return; }
+  jdFile = file;
+  document.getElementById('jd-file-name').textContent = file.name;
+  document.getElementById('jd-file-item').style.display = 'flex';
+}
+
+function clearJdFile() {
+  jdFile = null;
+  document.getElementById('jd-file-input').value = '';
+  document.getElementById('jd-file-item').style.display = 'none';
 }
 
 function addFiles(files) {
@@ -339,9 +398,15 @@ dropZone.addEventListener('dragover', function(e){ e.preventDefault(); dropZone.
 dropZone.addEventListener('dragleave', function(){ dropZone.style.borderColor='#d1d5db'; });
 dropZone.addEventListener('drop', function(e){ e.preventDefault(); dropZone.style.borderColor='#d1d5db'; addFiles(e.dataTransfer.files); });
 
+var jdDropZone = document.getElementById('jd-drop-zone');
+jdDropZone.addEventListener('dragover', function(e){ e.preventDefault(); jdDropZone.style.borderColor='#1d4ed8'; });
+jdDropZone.addEventListener('dragleave', function(){ jdDropZone.style.borderColor='#d1d5db'; });
+jdDropZone.addEventListener('drop', function(e){ e.preventDefault(); jdDropZone.style.borderColor='#d1d5db'; if (e.dataTransfer.files[0]) setJdFile(e.dataTransfer.files[0]); });
+
 async function doUpload() {
   var jd = document.getElementById('jd-text').value.trim();
-  if (!jd) { showError('upload-error', 'Paste a job description first.'); return; }
+  if (jdMode === 'text' && !jd) { showError('upload-error', 'Paste a job description first.'); return; }
+  if (jdMode === 'file' && !jdFile) { showError('upload-error', 'Upload a job description file first.'); return; }
   if (selectedFiles.length === 0) { showError('upload-error', 'Select at least one resume file.'); return; }
   hideError('upload-error');
 
@@ -351,7 +416,11 @@ async function doUpload() {
   document.getElementById('progress-fill').style.width = '20%';
 
   var form = new FormData();
-  form.append('job_description', jd);
+  if (jdMode === 'text') {
+    form.append('job_description', jd);
+  } else {
+    form.append('jd_file', jdFile);
+  }
   selectedFiles.forEach(function(f){ form.append('resumes', f); });
 
   try {
@@ -374,6 +443,7 @@ async function doUpload() {
     selectedFiles = [];
     renderFileList();
     document.getElementById('jd-text').value = '';
+    clearJdFile();
   } catch(e) {
     showError('upload-error', 'Could not reach the server. Check your connection.');
   } finally {
