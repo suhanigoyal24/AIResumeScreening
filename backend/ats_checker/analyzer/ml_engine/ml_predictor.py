@@ -19,28 +19,28 @@ class ATSMLPredictor:
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"ML model not found at {model_path}. Run trainer.py first.")
         
-        print(f"🔌 Loading ML model from {model_path}")
+        print(f"Loading ML model from {model_path}")
         
         # Load the model file
         model_data = joblib.load(model_path)
         
         # Handle both old and new formats
         if isinstance(model_data, dict) and 'pipeline' in model_data:
-            # ✅ New format: dict with 'pipeline' key
+            # New format: dict with 'pipeline' key
             self.pipeline = model_data['pipeline']
             self.feature_cols = model_data.get('feature_cols', [
                 'tfidf_similarity', 'skill_overlap_ratio', 'extra_skills_count',
                 'experience_score', 'resume_length', 'jd_length'
             ])
         else:
-            # ⚠️ Old format: direct vectorizer or model
+            # Old format: direct vectorizer or model
             # Fallback to simple TF-IDF + cosine similarity
-            print("⚠️ Old model format detected. Using fallback TF-IDF scorer.")
+            print("Old model format detected. Using fallback TF-IDF scorer.")
             self.pipeline = None  # Signal to use fallback
             self.vectorizer = model_data if hasattr(model_data, 'transform') else None
             self.feature_cols = []
         
-        print("✅ ML Predictor ready")
+        print("ML Predictor ready")
     
     def _extract_features_single(self, resume_text: str, jd_text: str) -> dict:
         """Extract features for a single prediction"""
