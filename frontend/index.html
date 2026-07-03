@@ -1,202 +1,451 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Resume Screening API</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9fafb; color: #111827; line-height: 1.6; }
-    .header { background: #111827; color: white; padding: 48px 24px; text-align: center; }
-    .header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
-    .header p { color: #9ca3af; font-size: 1rem; max-width: 600px; margin: 0 auto; }
-    .badge { display: inline-block; background: #1d4ed8; color: white; font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; margin: 16px 4px 0; }
-    .badge.green { background: #15803d; }
-    .badge.purple { background: #7c3aed; }
-    .container { max-width: 860px; margin: 0 auto; padding: 40px 24px; }
-    .section { margin-bottom: 40px; }
-    .section h2 { font-size: 1.1rem; font-weight: 600; color: #374151; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
-    .endpoint { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-bottom: 12px; }
-    .endpoint-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-    .method { font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
-    .method.post { background: #fef3c7; color: #92400e; }
-    .method.get { background: #dbeafe; color: #1e40af; }
-    .endpoint-path { font-family: monospace; font-size: 0.9rem; font-weight: 600; color: #111827; }
-    .endpoint p { font-size: 0.875rem; color: #6b7280; margin-bottom: 10px; }
-    .auth-tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; background: #fee2e2; color: #991b1b; }
-    .auth-tag.open { background: #d1fae5; color: #065f46; }
-    pre { background: #1f2937; color: #f3f4f6; padding: 16px; border-radius: 6px; font-size: 0.8rem; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
-    .links { display: flex; gap: 12px; flex-wrap: wrap; }
-    .link-btn { display: inline-block; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-size: 0.875rem; font-weight: 500; }
-    .link-btn.dark { background: #111827; color: white; }
-    .link-btn.outline { background: white; color: #111827; border: 1px solid #d1d5db; }
-    .link-btn:hover { opacity: 0.85; }
-    .stack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
-    .stack-item { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; }
-    .stack-item .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #9ca3af; margin-bottom: 4px; }
-    .stack-item .value { font-size: 0.875rem; font-weight: 500; color: #111827; }
-    footer { text-align: center; padding: 32px 24px; color: #9ca3af; font-size: 0.8rem; border-top: 1px solid #e5e7eb; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ATS Resume Checker</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #111827; min-height: 100vh; }
+nav { background: #111827; padding: 0 24px; height: 52px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+nav .brand { color: #fff; font-size: 14px; font-weight: 500; }
+nav .user-info { font-size: 12px; color: #9ca3af; display: none; align-items: center; gap: 12px; }
+nav .user-info span { color: #60a5fa; }
+nav .logout-btn { font-size: 12px; color: #9ca3af; border: 0.5px solid #374151; background: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; }
+nav .logout-btn:hover { color: #fff; border-color: #6b7280; }
+main { padding-top: 52px; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+
+/* Auth screen */
+#auth-screen { width: 100%; max-width: 400px; padding: 24px; }
+.auth-card { background: #fff; border: 0.5px solid #e5e7eb; border-radius: 12px; padding: 32px; }
+.auth-card h1 { font-size: 16px; font-weight: 500; color: #111827; margin-bottom: 4px; }
+.auth-card .subtitle { font-size: 13px; color: #6b7280; margin-bottom: 24px; }
+.tab-switcher { display: flex; border: 0.5px solid #e5e7eb; border-radius: 6px; overflow: hidden; margin-bottom: 24px; }
+.tab-switcher button { flex: 1; padding: 8px; font-size: 13px; border: none; cursor: pointer; transition: background 0.15s; }
+.tab-switcher button.active { background: #1d4ed8; color: #fff; }
+.tab-switcher button:not(.active) { background: #fff; color: #6b7280; }
+.form-group { margin-bottom: 14px; }
+.form-group label { font-size: 12px; color: #374151; display: block; margin-bottom: 5px; }
+.form-group input { width: 100%; padding: 9px 12px; border: 0.5px solid #d1d5db; border-radius: 6px; font-size: 13px; color: #111827; outline: none; }
+.form-group input:focus { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.1); }
+.primary-btn { width: 100%; padding: 10px; background: #1d4ed8; color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; }
+.primary-btn:hover { background: #1e40af; }
+.primary-btn:disabled { background: #93c5fd; cursor: not-allowed; }
+.error-msg { font-size: 12px; color: #dc2626; background: #fef2f2; border: 0.5px solid #fecaca; border-radius: 6px; padding: 8px 12px; margin-bottom: 14px; display: none; }
+
+/* App screen */
+#app-screen { display: none; width: 100%; max-width: 860px; padding: 24px; align-items: flex-start; }
+.page { display: none; width: 100%; }
+.page.active { display: block; }
+.page-nav { display: flex; gap: 4px; background: #fff; border: 0.5px solid #e5e7eb; border-radius: 8px; padding: 4px; margin-bottom: 20px; }
+.page-nav button { flex: 1; padding: 7px 12px; font-size: 13px; border: none; border-radius: 5px; cursor: pointer; color: #6b7280; background: transparent; }
+.page-nav button.active { background: #1d4ed8; color: #fff; font-weight: 500; }
+
+/* Upload page */
+.card { background: #fff; border: 0.5px solid #e5e7eb; border-radius: 12px; padding: 24px; }
+.card h2 { font-size: 15px; font-weight: 500; color: #111827; margin-bottom: 4px; }
+.card .hint { font-size: 12px; color: #6b7280; margin-bottom: 20px; }
+textarea { width: 100%; padding: 10px 12px; border: 0.5px solid #d1d5db; border-radius: 6px; font-size: 13px; color: #111827; resize: vertical; outline: none; font-family: inherit; }
+textarea:focus { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.1); }
+.drop-zone { border: 0.5px dashed #d1d5db; border-radius: 8px; padding: 32px; text-align: center; background: #f9fafb; cursor: pointer; margin-bottom: 16px; }
+.drop-zone:hover { border-color: #1d4ed8; background: #eff6ff; }
+.drop-zone .icon { font-size: 28px; color: #9ca3af; margin-bottom: 8px; }
+.drop-zone p { font-size: 13px; color: #6b7280; }
+.drop-zone .browse { color: #1d4ed8; cursor: pointer; text-decoration: underline; }
+.drop-zone .formats { font-size: 11px; color: #9ca3af; margin-top: 4px; }
+.file-list { margin-bottom: 16px; display: none; }
+.file-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 12px; background: #f9fafb; border: 0.5px solid #e5e7eb; border-radius: 6px; margin-bottom: 4px; font-size: 12px; color: #374151; }
+.file-item button { background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 14px; }
+.file-item button:hover { color: #dc2626; }
+.progress-bar { height: 4px; background: #e5e7eb; border-radius: 2px; margin-bottom: 16px; display: none; }
+.progress-bar .fill { height: 100%; background: #1d4ed8; border-radius: 2px; width: 0; transition: width 0.3s; }
+
+/* Results page */
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+.stat-card { background: #fff; border: 0.5px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; }
+.stat-card .label { font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.stat-card .value { font-size: 22px; font-weight: 500; color: #111827; }
+.candidate-card { background: #fff; border: 0.5px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: #dbeafe; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: #1d4ed8; flex-shrink: 0; }
+.avatar.gray { background: #f3f4f6; color: #6b7280; }
+.candidate-info { flex: 1; min-width: 0; }
+.candidate-name { font-size: 13px; font-weight: 500; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.candidate-skills { font-size: 11px; color: #9ca3af; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.candidate-score { text-align: right; flex-shrink: 0; }
+.score-num { font-size: 20px; font-weight: 500; }
+.score-num.high { color: #1d4ed8; }
+.score-num.low { color: #6b7280; }
+.badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; margin-top: 3px; display: inline-block; }
+.badge.shortlist { background: #dbeafe; color: #1d4ed8; }
+.badge.review { background: #f3f4f6; color: #6b7280; border: 0.5px solid #e5e7eb; }
+.empty-state { text-align: center; padding: 48px 24px; color: #9ca3af; font-size: 13px; }
+.empty-state p { margin-top: 8px; }
+.section-label { font-size: 12px; font-weight: 500; color: #374151; margin-bottom: 10px; }
+.filter-row { display: flex; gap: 8px; margin-bottom: 16px; align-items: center; }
+.filter-row input { padding: 7px 12px; border: 0.5px solid #d1d5db; border-radius: 6px; font-size: 12px; color: #111827; outline: none; flex: 1; }
+.filter-row input:focus { border-color: #1d4ed8; }
+.filter-row select { padding: 7px 12px; border: 0.5px solid #d1d5db; border-radius: 6px; font-size: 12px; color: #111827; outline: none; background: #fff; }
+</style>
 </head>
 <body>
 
-<div class="header">
-  <h1>AI Resume Screening API</h1>
-  <p>NLP pipeline that scores resumes against job descriptions using TF-IDF, cosine similarity, and skill extraction — cutting manual screening time by ~70%.</p>
-  <span class="badge">Django REST Framework</span>
-  <span class="badge green">MySQL</span>
-  <span class="badge purple">JWT Auth</span>
-</div>
+<nav>
+  <div class="brand">ATS Resume Checker</div>
+  <div class="user-info" id="nav-user">
+    Logged in as <span id="nav-username"></span>
+    <button class="logout-btn" onclick="logout()">Log out</button>
+  </div>
+</nav>
 
-<div class="container">
+<main id="main-auth">
+  <div id="auth-screen">
+    <div class="auth-card">
+      <div class="tab-switcher">
+        <button class="active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
+        <button id="tab-register" onclick="switchAuthTab('register')">Register</button>
+      </div>
 
-  <div class="section">
-    <h2>Links</h2>
-    <div class="links">
-      <a class="link-btn dark" href="https://github.com/suhanigoyal24/AIResumeScreening" target="_blank">GitHub Repository</a>
-      <a class="link-btn outline" href="https://gsuhani17-ats-checker-backend.hf.space/api/candidates/" target="_blank">Live API</a>
-      <a class="link-btn outline" href="https://youtu.be/ut_Auyn0wTo?si=FzdEyAYAyhyReFya" target="_blank">Demo Video</a>
+      <div id="login-form">
+        <h1>Login to your account</h1>
+        <p class="subtitle">Enter your credentials to continue</p>
+        <div class="error-msg" id="login-error"></div>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="login-username" placeholder="Enter username" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="login-password" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()" />
+        </div>
+        <button class="primary-btn" onclick="doLogin()" id="login-btn">Log in</button>
+      </div>
+
+      <div id="register-form" style="display:none;">
+        <h1>Create a new account</h1>
+        <p class="subtitle">Sign up to start screening resumes</p>
+        <div class="error-msg" id="register-error"></div>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="reg-username" placeholder="Choose a username" />
+        </div>
+        <div class="form-group">
+          <label>Email (optional)</label>
+          <input type="email" id="reg-email" placeholder="your@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="reg-password" placeholder="Choose a password" onkeydown="if(event.key==='Enter')doRegister()" />
+        </div>
+        <button class="primary-btn" onclick="doRegister()" id="register-btn">Sign up</button>
+      </div>
     </div>
   </div>
+</main>
 
-  <div class="section">
-    <h2>Tech Stack</h2>
-    <div class="stack-grid">
-      <div class="stack-item"><div class="label">Language</div><div class="value">Python 3.12</div></div>
-      <div class="stack-item"><div class="label">Framework</div><div class="value">Django + DRF</div></div>
-      <div class="stack-item"><div class="label">Database</div><div class="value">MySQL (TiDB Cloud)</div></div>
-      <div class="stack-item"><div class="label">Auth</div><div class="value">JWT (SimpleJWT)</div></div>
-      <div class="stack-item"><div class="label">NLP</div><div class="value">spaCy + NLTK</div></div>
-      <div class="stack-item"><div class="label">ML</div><div class="value">TF-IDF + Cosine Similarity</div></div>
-      <div class="stack-item"><div class="label">Hosting</div><div class="value">Hugging Face Spaces</div></div>
-      <div class="stack-item"><div class="label">File Support</div><div class="value">PDF, DOCX, TXT</div></div>
+<main id="main-app" style="display:none; align-items: flex-start; justify-content: center; padding: 24px;">
+  <div style="width: 100%; max-width: 860px;">
+    <div class="page-nav">
+      <button class="active" onclick="showPage('upload')">Upload</button>
+      <button onclick="showPage('results')">Results</button>
+    </div>
+
+    <!-- Upload Page -->
+    <div class="page active" id="page-upload">
+      <div class="card">
+        <h2>Screen resumes</h2>
+        <p class="hint">Upload up to 20 resumes and paste a job description to get ranked scores.</p>
+
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label style="font-size: 12px; color: #374151; display: block; margin-bottom: 5px;">Job description</label>
+          <textarea id="jd-text" rows="5" placeholder="Paste the full job description here..."></textarea>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 6px;">
+          <label style="font-size: 12px; color: #374151; display: block; margin-bottom: 5px;">Resumes</label>
+        </div>
+
+        <div class="drop-zone" onclick="document.getElementById('file-input').click()" id="drop-zone">
+          <div class="icon">&#8679;</div>
+          <p>Drop files here or <span class="browse">browse</span></p>
+          <p class="formats">PDF and DOCX supported</p>
+        </div>
+        <input type="file" id="file-input" multiple accept=".pdf,.docx,.doc" style="display:none" onchange="addFiles(this.files)" />
+
+        <div class="file-list" id="file-list"></div>
+
+        <div class="progress-bar" id="progress-bar">
+          <div class="fill" id="progress-fill"></div>
+        </div>
+
+        <div class="error-msg" id="upload-error"></div>
+
+        <button class="primary-btn" onclick="doUpload()" id="upload-btn">Analyse resumes</button>
+      </div>
+    </div>
+
+    <!-- Results Page -->
+    <div class="page" id="page-results">
+      <div id="results-empty" class="card">
+        <div class="empty-state">
+          <div style="font-size: 32px; color: #d1d5db;">&#9776;</div>
+          <p>No results yet. Upload resumes to get started.</p>
+        </div>
+      </div>
+      <div id="results-content" style="display:none;">
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="filter-row">
+          <input type="text" id="search-input" placeholder="Search by name..." oninput="renderCandidates()" />
+          <select id="filter-verdict" onchange="renderCandidates()">
+            <option value="">All candidates</option>
+            <option value="Shortlist">Shortlist only</option>
+            <option value="Review">Review only</option>
+          </select>
+        </div>
+        <div class="section-label" id="results-count"></div>
+        <div id="candidates-list"></div>
+      </div>
     </div>
   </div>
+</main>
 
-  <div class="section">
-    <h2>Authentication Endpoints</h2>
+<script>
+var API = 'https://gsuhani17-ats-checker-backend.hf.space';
+var token = '';
+var username = '';
+var selectedFiles = [];
+var allCandidates = [];
 
-    <div class="endpoint">
-      <div class="endpoint-header">
-        <span class="method post">POST</span>
-        <span class="endpoint-path">/api/auth/register/</span>
-        <span class="auth-tag open">Public</span>
-      </div>
-      <p>Register a new user account. Returns JWT access and refresh tokens.</p>
-      <pre>curl -X POST https://gsuhani17-ats-checker-backend.hf.space/api/auth/register/ \
-  -H "Content-Type: application/json" \
-  -d '{"username": "hrmanager", "password": "yourpassword", "email": "hr@company.com"}'</pre>
-    </div>
+function switchAuthTab(tab) {
+  document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('tab-login').className = tab === 'login' ? 'active' : '';
+  document.getElementById('tab-register').className = tab === 'register' ? 'active' : '';
+  document.getElementById('login-error').style.display = 'none';
+  document.getElementById('register-error').style.display = 'none';
+}
 
-    <div class="endpoint">
-      <div class="endpoint-header">
-        <span class="method post">POST</span>
-        <span class="endpoint-path">/api/auth/login/</span>
-        <span class="auth-tag open">Public</span>
-      </div>
-      <p>Login with existing credentials. Returns access token (1 hour) and refresh token (7 days).</p>
-      <pre>curl -X POST https://gsuhani17-ats-checker-backend.hf.space/api/auth/login/ \
-  -H "Content-Type: application/json" \
-  -d '{"username": "hrmanager", "password": "yourpassword"}'</pre>
-    </div>
+function showError(id, msg) {
+  var el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = 'block';
+}
 
-    <div class="endpoint">
-      <div class="endpoint-header">
-        <span class="method post">POST</span>
-        <span class="endpoint-path">/api/auth/refresh/</span>
-        <span class="auth-tag open">Public</span>
-      </div>
-      <p>Get a new access token using your refresh token.</p>
-      <pre>curl -X POST https://gsuhani17-ats-checker-backend.hf.space/api/auth/refresh/ \
-  -H "Content-Type: application/json" \
-  -d '{"refresh": "your_refresh_token"}'</pre>
-    </div>
-  </div>
+function hideError(id) {
+  document.getElementById(id).style.display = 'none';
+}
 
-  <div class="section">
-    <h2>Resume Screening Endpoints</h2>
+async function doLogin() {
+  var u = document.getElementById('login-username').value.trim();
+  var p = document.getElementById('login-password').value.trim();
+  if (!u || !p) { showError('login-error', 'Enter username and password.'); return; }
+  hideError('login-error');
+  var btn = document.getElementById('login-btn');
+  btn.disabled = true; btn.textContent = 'Logging in...';
+  try {
+    var r = await fetch(API + '/api/auth/login/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: u, password: p })
+    });
+    var d = await r.json();
+    if (!r.ok) { showError('login-error', d.error || 'Login failed.'); return; }
+    token = d.access; username = d.username;
+    enterApp();
+  } catch(e) {
+    showError('login-error', 'Could not reach the server. Try again.');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Log in';
+  }
+}
 
-    <div class="endpoint">
-      <div class="endpoint-header">
-        <span class="method post">POST</span>
-        <span class="endpoint-path">/api/upload/</span>
-        <span class="auth-tag">Requires JWT</span>
-      </div>
-      <p>Upload up to 20 resumes (PDF/DOCX) against a job description. Returns ranked scores, matched keywords, and recommendations.</p>
-      <pre>curl -X POST https://gsuhani17-ats-checker-backend.hf.space/api/upload/ \
-  -H "Authorization: Bearer your_access_token" \
-  -F "resumes=@resume1.pdf" \
-  -F "resumes=@resume2.pdf" \
-  -F "job_description=We are looking for a Python backend developer..."</pre>
-    </div>
+async function doRegister() {
+  var u = document.getElementById('reg-username').value.trim();
+  var e = document.getElementById('reg-email').value.trim();
+  var p = document.getElementById('reg-password').value.trim();
+  if (!u || !p) { showError('register-error', 'Username and password are required.'); return; }
+  hideError('register-error');
+  var btn = document.getElementById('register-btn');
+  btn.disabled = true; btn.textContent = 'Creating account...';
+  try {
+    var r = await fetch(API + '/api/auth/register/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: u, email: e, password: p })
+    });
+    var d = await r.json();
+    if (!r.ok) { showError('register-error', d.error || 'Registration failed.'); return; }
+    token = d.access; username = d.username;
+    enterApp();
+  } catch(e) {
+    showError('register-error', 'Could not reach the server. Try again.');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Sign up';
+  }
+}
 
-    <div class="endpoint">
-      <div class="endpoint-header">
-        <span class="method get">GET</span>
-        <span class="endpoint-path">/api/candidates/</span>
-        <span class="auth-tag">Requires JWT</span>
-      </div>
-      <p>List all candidates with their scores and extracted skills.</p>
-      <pre>curl https://gsuhani17-ats-checker-backend.hf.space/api/candidates/ \
-  -H "Authorization: Bearer your_access_token"</pre>
-    </div>
+function enterApp() {
+  document.getElementById('main-auth').style.display = 'none';
+  document.getElementById('main-app').style.display = 'flex';
+  document.getElementById('nav-user').style.display = 'flex';
+  document.getElementById('nav-username').textContent = username;
+}
 
-    <div class="endpoint">
-      <div class="endpoint-header">
-        <span class="method get">GET</span>
-        <span class="endpoint-path">/api/dashboard/</span>
-        <span class="auth-tag">Requires JWT</span>
-      </div>
-      <p>Dashboard summary with pass rates, average scores, and candidate comparison. Filter by minimum score using <code>?min_score=60</code>.</p>
-      <pre>curl "https://gsuhani17-ats-checker-backend.hf.space/api/dashboard/?min_score=60" \
-  -H "Authorization: Bearer your_access_token"</pre>
-    </div>
+function logout() {
+  token = ''; username = ''; selectedFiles = []; allCandidates = [];
+  document.getElementById('main-auth').style.display = 'flex';
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('nav-user').style.display = 'none';
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  showPage('upload');
+}
 
-    <div class="endpoint">
-      <div class="endpoint-header">
-        <span class="method get">GET</span>
-        <span class="endpoint-path">/api/dashboard/history/</span>
-        <span class="auth-tag">Requires JWT</span>
-      </div>
-      <p>Paginated full history of all uploads. Supports <code>?page=1&search=python&min_score=70</code>.</p>
-      <pre>curl "https://gsuhani17-ats-checker-backend.hf.space/api/dashboard/history/?page=1" \
-  -H "Authorization: Bearer your_access_token"</pre>
-    </div>
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(function(p){ p.className = 'page'; });
+  document.querySelectorAll('.page-nav button').forEach(function(b,i){
+    b.className = (i === (name === 'upload' ? 0 : 1)) ? 'active' : '';
+  });
+  document.getElementById('page-' + name).className = 'page active';
+}
 
-    <div class="endpoint">
-      <div class="endpoint-header">
-        <span class="method post">POST</span>
-        <span class="endpoint-path">/api/ml-analyze/</span>
-        <span class="auth-tag">Requires JWT</span>
-      </div>
-      <p>Standalone ML analysis for a single resume against a job description.</p>
-      <pre>curl -X POST https://gsuhani17-ats-checker-backend.hf.space/api/ml-analyze/ \
-  -H "Authorization: Bearer your_access_token" \
-  -F "resume=@resume.pdf" \
-  -F "job_description=Looking for a Django developer with REST API experience"</pre>
-    </div>
-  </div>
+function addFiles(files) {
+  for (var i = 0; i < files.length; i++) {
+    if (selectedFiles.length >= 20) break;
+    var f = files[i];
+    var ext = f.name.split('.').pop().toLowerCase();
+    if (['pdf','docx','doc'].indexOf(ext) === -1) continue;
+    var already = selectedFiles.some(function(x){ return x.name === f.name; });
+    if (!already) selectedFiles.push(f);
+  }
+  renderFileList();
+}
 
-  <div class="section">
-    <h2>How Scoring Works</h2>
-    <div class="endpoint">
-      <p>Each resume is scored using a weighted blend of four signals:</p>
-      <pre>Final Score = 40% TF-IDF semantic similarity
-            + 30% skill overlap (Jaccard index)
-            + 20% experience keyword match
-            + 10% education keyword match
+function renderFileList() {
+  var list = document.getElementById('file-list');
+  if (selectedFiles.length === 0) { list.style.display = 'none'; return; }
+  list.style.display = 'block';
+  list.innerHTML = selectedFiles.map(function(f, i) {
+    return '<div class="file-item"><span>' + f.name + '</span><button onclick="removeFile(' + i + ')">&#x2715;</button></div>';
+  }).join('');
+}
 
-Scores above 60 → Shortlist
-Scores below 60 → Review</pre>
-    </div>
-  </div>
+function removeFile(i) {
+  selectedFiles.splice(i, 1);
+  renderFileList();
+}
 
-</div>
+var dropZone = document.getElementById('drop-zone');
+dropZone.addEventListener('dragover', function(e){ e.preventDefault(); dropZone.style.borderColor='#1d4ed8'; });
+dropZone.addEventListener('dragleave', function(){ dropZone.style.borderColor='#d1d5db'; });
+dropZone.addEventListener('drop', function(e){ e.preventDefault(); dropZone.style.borderColor='#d1d5db'; addFiles(e.dataTransfer.files); });
 
-<footer>
-  Built by Suhani Goyal &nbsp;|&nbsp;
-  <a href="https://github.com/suhanigoyal24" style="color: #6b7280;">GitHub</a>
-</footer>
+async function doUpload() {
+  var jd = document.getElementById('jd-text').value.trim();
+  if (!jd) { showError('upload-error', 'Paste a job description first.'); return; }
+  if (selectedFiles.length === 0) { showError('upload-error', 'Select at least one resume file.'); return; }
+  hideError('upload-error');
 
+  var btn = document.getElementById('upload-btn');
+  btn.disabled = true; btn.textContent = 'Analysing...';
+  document.getElementById('progress-bar').style.display = 'block';
+  document.getElementById('progress-fill').style.width = '20%';
+
+  var form = new FormData();
+  form.append('job_description', jd);
+  selectedFiles.forEach(function(f){ form.append('resumes', f); });
+
+  try {
+    document.getElementById('progress-fill').style.width = '60%';
+    var r = await fetch(API + '/api/upload/', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+      body: form
+    });
+    document.getElementById('progress-fill').style.width = '90%';
+    var d = await r.json();
+    if (!r.ok) {
+      if (r.status === 401) { showError('upload-error', 'Session expired. Please log out and log in again.'); return; }
+      showError('upload-error', d.error || 'Upload failed.');
+      return;
+    }
+    document.getElementById('progress-fill').style.width = '100%';
+    processResults(d.results);
+    showPage('results');
+    selectedFiles = [];
+    renderFileList();
+    document.getElementById('jd-text').value = '';
+  } catch(e) {
+    showError('upload-error', 'Could not reach the server. Check your connection.');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Analyse resumes';
+    setTimeout(function(){ document.getElementById('progress-bar').style.display = 'none'; document.getElementById('progress-fill').style.width = '0'; }, 800);
+  }
+}
+
+function processResults(results) {
+  var successful = results.filter(function(r){ return r.success; });
+  allCandidates = successful.map(function(r){
+    return {
+      name: r.filename.replace(/\.[^.]+$/, ''),
+      score: r.score,
+      skills: (r.matched_keywords || []).slice(0, 5),
+      verdict: r.score >= 60 ? 'Shortlist' : 'Review'
+    };
+  }).sort(function(a,b){ return b.score - a.score; });
+  renderResults();
+}
+
+function renderResults() {
+  if (allCandidates.length === 0) {
+    document.getElementById('results-empty').style.display = 'block';
+    document.getElementById('results-content').style.display = 'none';
+    return;
+  }
+  document.getElementById('results-empty').style.display = 'none';
+  document.getElementById('results-content').style.display = 'block';
+
+  var avg = allCandidates.reduce(function(s,c){ return s+c.score; }, 0) / allCandidates.length;
+  var shortlisted = allCandidates.filter(function(c){ return c.verdict === 'Shortlist'; }).length;
+
+  document.getElementById('stats-grid').innerHTML =
+    stat('Resumes', allCandidates.length) +
+    stat('Avg score', avg.toFixed(1)) +
+    stat('Shortlisted', shortlisted);
+
+  renderCandidates();
+}
+
+function stat(label, value) {
+  return '<div class="stat-card"><div class="label">' + label + '</div><div class="value">' + value + '</div></div>';
+}
+
+function initials(name) {
+  return name.split(/[\s_\-]+/).map(function(w){ return w[0]; }).join('').toUpperCase().slice(0, 2);
+}
+
+function renderCandidates() {
+  var search = document.getElementById('search-input').value.toLowerCase();
+  var verdict = document.getElementById('filter-verdict').value;
+  var filtered = allCandidates.filter(function(c){
+    return (!search || c.name.toLowerCase().includes(search)) &&
+           (!verdict || c.verdict === verdict);
+  });
+  document.getElementById('results-count').textContent = filtered.length + ' candidate' + (filtered.length !== 1 ? 's' : '');
+  document.getElementById('candidates-list').innerHTML = filtered.map(function(c){
+    var high = c.score >= 60;
+    return '<div class="candidate-card">' +
+      '<div class="avatar' + (high ? '' : ' gray') + '">' + initials(c.name) + '</div>' +
+      '<div class="candidate-info">' +
+        '<div class="candidate-name">' + c.name + '</div>' +
+        '<div class="candidate-skills">' + (c.skills.length ? c.skills.join(' · ') : 'No matched keywords') + '</div>' +
+      '</div>' +
+      '<div class="candidate-score">' +
+        '<div class="score-num ' + (high ? 'high' : 'low') + '">' + c.score.toFixed(1) + '</div>' +
+        '<span class="badge ' + (high ? 'shortlist' : 'review') + '">' + c.verdict + '</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+</script>
 </body>
 </html>
