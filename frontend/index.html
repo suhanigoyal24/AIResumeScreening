@@ -159,6 +159,7 @@ textarea:focus { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.1
     <div class="page-nav">
       <button class="active" onclick="showPage('upload')">Upload</button>
       <button onclick="showPage('results')">Results</button>
+      <button onclick="showPage('history')">History</button>
     </div>
 
     <!-- Upload Page -->
@@ -237,6 +238,28 @@ textarea:focus { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.1
         </div>
         <div class="section-label" id="results-count"></div>
         <div id="candidates-list"></div>
+      </div>
+    </div>
+
+    <!-- History Page -->
+    <div class="page" id="page-history">
+      <div class="card" style="padding: 24px 32px;">
+        <h2 style="margin-bottom: 18px;">Upload history</h2>
+        <div class="filter-row">
+          <input type="text" id="history-search" placeholder="Search by name..." oninput="loadHistory(1)" />
+          <select id="history-min-score" onchange="loadHistory(1)">
+            <option value="0">All scores</option>
+            <option value="60">60+ only</option>
+            <option value="70">70+ only</option>
+            <option value="80">80+ only</option>
+          </select>
+        </div>
+        <div id="history-empty" class="empty-state" style="display:none;">
+          <div style="font-size: 38px; color: #d1d5db;">&#9776;</div>
+          <p>No history yet.</p>
+        </div>
+        <div id="history-list"></div>
+        <div id="history-pagination" style="display:flex; justify-content:center; gap:10px; margin-top:20px;"></div>
       </div>
     </div>
   </div>
@@ -338,10 +361,64 @@ function logout() {
 
 function showPage(name) {
   document.querySelectorAll('.page').forEach(function(p){ p.className = 'page'; });
+  var idx = name === 'upload' ? 0 : name === 'results' ? 1 : 2;
   document.querySelectorAll('.page-nav button').forEach(function(b,i){
-    b.className = (i === (name === 'upload' ? 0 : 1)) ? 'active' : '';
+    b.className = (i === idx) ? 'active' : '';
   });
   document.getElementById('page-' + name).className = 'page active';
+  if (name === 'history') loadHistory(1);
+}
+
+async function loadHistory(page) {
+  var search = document.getElementById('history-search').value.trim();
+  var minScore = document.getElementById('history-min-score').value;
+  var url = API + '/api/dashboard/history/?page=' + page + '&min_score=' + minScore;
+  if (search) url += '&search=' + encodeURIComponent(search);
+
+  try {
+    var r = await fetch(url, { headers: { 'Authorization': 'Bearer ' + token } });
+    var d = await r.json();
+    if (!r.ok) return;
+
+    var list = document.getElementById('history-list');
+    var empty = document.getElementById('history-empty');
+
+    if (!d.results || d.results.length === 0) {
+      empty.style.display = 'block';
+      list.innerHTML = '';
+      document.getElementById('history-pagination').innerHTML = '';
+      return;
+    }
+    empty.style.display = 'none';
+
+    list.innerHTML = d.results.map(function(c) {
+      var high = c.score >= 60;
+      return '<div class="candidate-card">' +
+        '<div class="avatar' + (high ? '' : ' gray') + '">' + initials(c.name) + '</div>' +
+        '<div class="candidate-info">' +
+          '<div class="candidate-name">' + c.name + '</div>' +
+          '<div class="candidate-skills">' + (c.analyzed_at ? new Date(c.analyzed_at).toLocaleString() : '') + ' · ' + c.skills_count + ' skills matched</div>' +
+        '</div>' +
+        '<div class="candidate-score">' +
+          '<div class="score-num ' + (high ? 'high' : 'low') + '">' + c.score.toFixed(1) + '</div>' +
+          '<span class="badge ' + (high ? 'shortlist' : 'review') + '">' + c.verdict + '</span>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    var p = d.pagination;
+    var pagHtml = '';
+    if (p.total_pages > 1) {
+      for (var i = 1; i <= p.total_pages; i++) {
+        pagHtml += '<button class="primary-btn" style="width:auto;padding:6px 14px;' +
+          (i === p.page ? '' : 'background:#e5e7eb;color:#374151;') +
+          '" onclick="loadHistory(' + i + ')">' + i + '</button>';
+      }
+    }
+    document.getElementById('history-pagination').innerHTML = pagHtml;
+  } catch (e) {
+    console.error('History load failed', e);
+  }
 }
 
 function setJdMode(mode) {
