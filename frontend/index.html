@@ -97,6 +97,10 @@ textarea:focus { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.1
 .filter-row input { padding: 10px 14px; border: 0.5px solid #d1d5db; border-radius: 8px; font-size: 13px; color: #111827; outline: none; flex: 1; }
 .filter-row input:focus { border-color: #1d4ed8; }
 .filter-row select { padding: 10px 14px; border: 0.5px solid #d1d5db; border-radius: 8px; font-size: 13px; color: #111827; outline: none; background: #fff; }
+.results-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.download-btn { padding: 9px 18px; background: #111827; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.download-btn:hover { background: #1f2937; }
+.download-btn:disabled { background: #d1d5db; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -227,7 +231,9 @@ textarea:focus { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.1
         </div>
       </div>
       <div id="results-content" style="display:none;">
-        <div class="stats-grid" id="stats-grid"></div>
+        <div class="results-header-row">
+          <div class="stats-grid" id="stats-grid" style="margin-bottom:0; flex:1;"></div>
+        </div>
         <div class="filter-row">
           <input type="text" id="search-input" placeholder="Search by name..." oninput="renderCandidates()" />
           <select id="filter-verdict" onchange="renderCandidates()">
@@ -235,6 +241,7 @@ textarea:focus { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.1
             <option value="Shortlist">Shortlist only</option>
             <option value="Review">Review only</option>
           </select>
+          <button class="download-btn" onclick="downloadResultsCSV()" id="download-btn">&#x2B07; Download CSV</button>
         </div>
         <div class="section-label" id="results-count"></div>
         <div id="candidates-list"></div>
@@ -350,13 +357,9 @@ function enterApp() {
 }
 
 function logout() {
-  token = ''; username = ''; selectedFiles = []; allCandidates = []; jdFile = null;
-  document.getElementById('main-auth').style.display = 'flex';
-  document.getElementById('main-app').style.display = 'none';
-  document.getElementById('nav-user').style.display = 'none';
-  document.getElementById('login-username').value = '';
-  document.getElementById('login-password').value = '';
-  showPage('upload');
+  // Full reload guarantees zero leftover JS state (allCandidates, token, etc.)
+  // is carried over to whichever user logs in next on this browser/tab.
+  window.location.reload();
 }
 
 function showPage(name) {
@@ -376,7 +379,10 @@ async function loadHistory(page) {
   if (search) url += '&search=' + encodeURIComponent(search);
 
   try {
-    var r = await fetch(url, { headers: { 'Authorization': 'Bearer ' + token } });
+    var r = await fetch(url, {
+      headers: { 'Authorization': 'Bearer ' + token },
+      cache: 'no-store'
+    });
     var d = await r.json();
     if (!r.ok) return;
 
@@ -592,6 +598,40 @@ function renderCandidates() {
       '</div>' +
     '</div>';
   }).join('');
+}
+
+function downloadResultsCSV() {
+  if (!allCandidates.length) return;
+
+  var rows = [['Name', 'Score', 'Verdict', 'Matched Skills']];
+  allCandidates.forEach(function(c) {
+    rows.push([c.name, c.score, c.verdict, (c.skills || []).join('; ')]);
+  });
+
+  var csvContent = rows.map(function(row) {
+    return row.map(function(field) {
+      var f = String(field).replace(/"/g, '""');
+      return '"' + f + '"';
+    }).join(',');
+  }).join('\n');
+
+  var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+
+  var now = new Date();
+  var pad = function(n) { return String(n).padStart(2, '0'); };
+  var dateStr = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) +
+                '_' + pad(now.getHours()) + pad(now.getMinutes());
+  var safeUsername = (username || 'user').replace(/[^a-zA-Z0-9_\-]/g, '');
+  var filename = safeUsername + '_' + dateStr + '.csv';
+
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 </script>
 </body>
