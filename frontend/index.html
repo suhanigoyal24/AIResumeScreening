@@ -192,18 +192,14 @@ table textarea{width:100%;padding:5px;border:1px solid #d1d5db;border-radius:4px
   <!-- Dashboard -->
   <div class="pg" id="pgDashboard">
     <div class="wrap">
-      <div id="dashEmpty" class="card"><div class="empty">No data yet. Upload resumes to see the dashboard.</div></div>
+      <div id="dashLoading" class="card" style="display:none;"><div class="empty">Loading dashboard...</div></div>
+      <div id="dashEmpty" class="card" style="display:none;"><div class="empty">No data yet. Upload resumes to see the dashboard.</div></div>
       <div id="dashContent" style="display:none;">
         <div class="stats-row" id="dashStats"></div>
-        <div class="charts-row">
-          <div class="chart-card">
-            <h3>Matched skills frequency</h3>
-            <div id="chartSkillsWrap"></div>
-          </div>
-          <div class="chart-card">
-            <h3>Top missing skills</h3>
-            <div id="chartMissingWrap"></div>
-          </div>
+        <div class="chart-card" style="margin-bottom:16px;">
+          <h3>Skill gap overview</h3>
+          <div style="font-size:11px;color:#9ca3af;margin-top:-8px;margin-bottom:14px;">For each skill: how many candidates have it (blue) vs. are missing it (grey)</div>
+          <div id="chartSkillsWrap"></div>
         </div>
         <div class="card" style="padding:18px;">
           <div class="tbl-header">
@@ -422,9 +418,13 @@ function deduplicate(candidates){
 }
 
 async function loadDashboard(){
+  document.getElementById('dashLoading').style.display='block';
+  document.getElementById('dashEmpty').style.display='none';
+  document.getElementById('dashContent').style.display='none';
   try{
     var r1=await fetch(API+'/api/candidates/',{headers:{'Authorization':'Bearer '+token}});
-    if(!r1.ok){if(r1.status===401){alert('Session expired.');logout();}return;}
+    document.getElementById('dashLoading').style.display='none';
+    if(!r1.ok){if(r1.status===401){alert('Session expired.');logout();}else{document.getElementById('dashEmpty').style.display='block';}return;}
     var all=await r1.json();
 
     // Deduplicate — show only the most recent upload per candidate name
@@ -447,7 +447,11 @@ async function loadDashboard(){
 
     renderCharts(candidates);
     renderTable(candidates);
-  }catch(e){console.error('Dashboard error:',e);}
+  }catch(e){
+    console.error('Dashboard error:',e);
+    document.getElementById('dashLoading').style.display='none';
+    document.getElementById('dashEmpty').style.display='block';
+  }
 }
 
 function stat(l,v){return '<div class="stat"><div class="lbl">'+l+'</div><div class="val">'+v+'</div></div>';}
@@ -462,38 +466,47 @@ function renderCharts(candidates){
     (c.missing_skills||[]).forEach(function(s){mc[s]=(mc[s]||0)+1;});
   });
 
-  var scTop=topN(sc,10);
-  var mcTop=topN(mc,10);
+  // Combine into one row per skill: matched count + missing count
+  var allSkills=Array.from(new Set(Object.keys(sc).concat(Object.keys(mc))));
+  var rows=allSkills.map(function(s){
+    var m=sc[s]||0,x=mc[s]||0;
+    return {skill:s,matched:m,missing:x,total:m+x};
+  });
+  // Show skills with the biggest gaps first (most missing), then most matched
+  rows.sort(function(a,b){return b.missing-a.missing || b.matched-a.matched;});
+  rows=rows.slice(0,10);
 
   var swrap=document.getElementById('chartSkillsWrap');
-  var mwrap=document.getElementById('chartMissingWrap');
 
-  if(Object.keys(scTop).length){
-    swrap.innerHTML='<canvas id="chartSkills" height="180"></canvas>';
+  if(rows.length){
+    swrap.innerHTML='<canvas id="chartSkills" height="220"></canvas>';
     chartSkillsInst=new Chart(document.getElementById('chartSkills').getContext('2d'),{
       type:'bar',
-      data:{labels:Object.keys(scTop),datasets:[{data:Object.values(scTop),backgroundColor:'#3b82f6',borderRadius:4}]},
-      options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1,precision:0}}}}
+      data:{
+        labels:rows.map(function(r){return r.skill;}),
+        datasets:[
+          {label:'Have this skill',data:rows.map(function(r){return r.matched;}),backgroundColor:'#3b82f6',borderRadius:3},
+          {label:'Missing this skill',data:rows.map(function(r){return r.missing;}),backgroundColor:'#d1d5db',borderRadius:3}
+        ]
+      },
+      options:{
+        indexAxis:'y',
+        responsive:true,
+        plugins:{
+          legend:{display:true,position:'top',align:'end',labels:{boxWidth:12,font:{size:11}}},
+          tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.raw+' candidate(s)';}}}
+        },
+        scales:{
+          x:{stacked:true,beginAtZero:true,ticks:{stepSize:1,precision:0}},
+          y:{stacked:true}
+        }
+      }
     });
   }else{
-    swrap.innerHTML='<div class="no-chart">No matched skills data yet.<br>Upload resumes against a specific JD to see skill coverage.</div>';
-  }
-
-  if(Object.keys(mcTop).length){
-    mwrap.innerHTML='<canvas id="chartMissing" height="180"></canvas>';
-    chartMissingInst=new Chart(document.getElementById('chartMissing').getContext('2d'),{
-      type:'bar',
-      data:{labels:Object.keys(mcTop),datasets:[{data:Object.values(mcTop),backgroundColor:'#6b7280',borderRadius:4}]},
-      options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1,precision:0}}}}
-    });
-  }else{
-    mwrap.innerHTML='<div class="no-chart">No missing skills data yet.</div>';
+    swrap.innerHTML='<div class="no-chart">No skill data yet.<br>Upload resumes against a specific JD to see the skill gap overview.</div>';
   }
 }
 
-function topN(obj,n){
-  return Object.fromEntries(Object.entries(obj).sort(function(a,b){return b[1]-a[1];}).slice(0,n));
-}
 
 function renderTable(candidates){
   document.getElementById('dashTbody').innerHTML=candidates.map(function(c,i){
