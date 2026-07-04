@@ -9,23 +9,17 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f3f4f6;color:#111827;}
-
-/* Nav */
 nav{background:#111827;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:fixed;top:0;left:0;right:0;z-index:200;}
 .brand{color:#fff;font-size:14px;font-weight:600;}
 .nav-right{font-size:12px;color:#9ca3af;display:none;align-items:center;gap:10px;}
 .nav-right span{color:#60a5fa;}
 .logout-btn{font-size:12px;color:#9ca3af;border:1px solid #374151;background:none;padding:4px 10px;border-radius:4px;cursor:pointer;}
 .logout-btn:hover{color:#fff;}
-
-/* Sticky tab bar */
 .tab-bar{position:fixed;top:52px;left:0;right:0;z-index:190;background:#fff;border-bottom:1px solid #e5e7eb;display:none;}
-.tab-bar-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;gap:2px;}
-.tab-bar-inner button{padding:12px 20px;font-size:13px;border:none;background:transparent;cursor:pointer;color:#6b7280;border-bottom:2px solid transparent;font-weight:500;}
+.tab-bar-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;}
+.tab-bar-inner button{padding:13px 20px;font-size:13px;border:none;background:transparent;cursor:pointer;color:#6b7280;border-bottom:2px solid transparent;font-weight:500;}
 .tab-bar-inner button.active{color:#1d4ed8;border-bottom-color:#1d4ed8;}
 .tab-bar-inner button:hover{color:#1d4ed8;}
-
-/* Auth */
 .auth-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
 .auth-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:32px;width:100%;max-width:400px;}
 .tab-sw{display:flex;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;margin-bottom:22px;}
@@ -42,19 +36,12 @@ nav{background:#111827;height:52px;display:flex;align-items:center;justify-conte
 .pbtn:hover{background:#1e40af;}
 .pbtn:disabled{background:#93c5fd;cursor:not-allowed;}
 .errmsg{font-size:12px;color:#dc2626;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:8px 12px;margin-bottom:13px;display:none;}
-
-/* Pages */
-.app-body{padding-top:104px;}/* nav(52) + tabbar(52) */
-.pg{display:none;}
-.pg.active{display:block;}
+.app-body{padding-top:104px;}
+.pg{display:none;}.pg.active{display:block;}
 .wrap{max-width:1100px;margin:0 auto;padding:24px;}
-
-/* Cards */
 .card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px;margin-bottom:16px;}
 .card-title{font-size:15px;font-weight:500;margin-bottom:4px;}
 .card-hint{font-size:12px;color:#6b7280;margin-bottom:18px;}
-
-/* Upload */
 textarea{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:13px;outline:none;font-family:inherit;resize:vertical;}
 textarea:focus{border-color:#1d4ed8;}
 .jd-toggle{display:flex;gap:4px;margin-bottom:10px;}
@@ -71,19 +58,14 @@ textarea:focus{border-color:#1d4ed8;}
 .file-item button:hover{color:#dc2626;}
 .prog{height:3px;background:#e5e7eb;border-radius:2px;margin-bottom:12px;display:none;}
 .prog .fill{height:100%;background:#1d4ed8;border-radius:2px;width:0;transition:width .4s;}
-
-/* Dashboard stats */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
 .stat{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:14px 16px;}
 .stat .lbl{font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
 .stat .val{font-size:22px;font-weight:500;}
-
-/* Charts */
 .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
 .chart-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px;}
 .chart-card h3{font-size:13px;font-weight:500;color:#374151;margin-bottom:12px;}
-
-/* Table */
+.no-chart{text-align:center;padding:32px;color:#9ca3af;font-size:12px;}
 .tbl-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
 .tbl-header h3{font-size:14px;font-weight:500;}
 .dl-btn{padding:7px 14px;background:#111827;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;}
@@ -109,18 +91,16 @@ table textarea{width:100%;padding:5px;border:1px solid #d1d5db;border-radius:4px
 .contact-cell a{color:#1d4ed8;text-decoration:none;}
 .contact-cell a:hover{text-decoration:underline;}
 .reasoning{font-size:11px;color:#9ca3af;margin-top:3px;line-height:1.4;}
-
-/* History filters */
 .hist-filter{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
 .hist-filter input,.hist-filter select{padding:7px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:12px;outline:none;background:#fff;}
 .hist-filter input:focus,.hist-filter select:focus{border-color:#1d4ed8;}
 .hist-filter input{flex:1;min-width:160px;}
 .empty{text-align:center;padding:48px;color:#9ca3af;font-size:13px;}
+.info-banner{background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;padding:10px 14px;font-size:12px;color:#1e40af;margin-bottom:14px;}
 </style>
 </head>
 <body>
 
-<!-- Nav -->
 <nav>
   <div class="brand">ATS Resume Checker</div>
   <div class="nav-right" id="navRight">
@@ -129,7 +109,6 @@ table textarea{width:100%;padding:5px;border:1px solid #d1d5db;border-radius:4px
   </div>
 </nav>
 
-<!-- Sticky tab bar (shown after login) -->
 <div class="tab-bar" id="tabBar">
   <div class="tab-bar-inner">
     <button class="active" id="tab-upload" onclick="showPage('upload')">Upload</button>
@@ -165,7 +144,7 @@ table textarea{width:100%;padding:5px;border:1px solid #d1d5db;border-radius:4px
   </div>
 </div>
 
-<!-- App body -->
+<!-- App -->
 <div class="app-body" id="appBody" style="display:none;">
 
   <!-- Upload -->
@@ -174,7 +153,6 @@ table textarea{width:100%;padding:5px;border:1px solid #d1d5db;border-radius:4px
       <div class="card">
         <div class="card-title">Screen resumes</div>
         <div class="card-hint">Upload up to 20 resumes and provide a job description to get ranked scores and contact details.</div>
-
         <div style="margin-bottom:14px;">
           <label style="font-size:12px;color:#374151;display:block;margin-bottom:6px;">Job description</label>
           <div class="jd-toggle">
@@ -194,7 +172,6 @@ table textarea{width:100%;padding:5px;border:1px solid #d1d5db;border-radius:4px
             <div id="jdFileChosen" style="font-size:12px;color:#374151;margin-top:6px;"></div>
           </div>
         </div>
-
         <div style="margin-bottom:14px;">
           <label style="font-size:12px;color:#374151;display:block;margin-bottom:6px;">Resumes (PDF or DOCX, up to 20)</label>
           <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
@@ -205,7 +182,6 @@ table textarea{width:100%;padding:5px;border:1px solid #d1d5db;border-radius:4px
           <input type="file" id="fileInput" multiple accept=".pdf,.docx,.doc" style="display:none" onchange="addFiles(this.files)"/>
           <div id="fileList"></div>
         </div>
-
         <div class="prog" id="progBar"><div class="fill" id="progFill"></div></div>
         <div class="errmsg" id="uploadErr"></div>
         <button class="pbtn" id="uploadBtn" onclick="doUpload()">Analyse resumes</button>
@@ -220,28 +196,30 @@ table textarea{width:100%;padding:5px;border:1px solid #d1d5db;border-radius:4px
       <div id="dashContent" style="display:none;">
         <div class="stats-row" id="dashStats"></div>
         <div class="charts-row">
-          <div class="chart-card"><h3>Matched skills frequency</h3><canvas id="chartSkills" height="180"></canvas></div>
-          <div class="chart-card"><h3>Top missing skills</h3><canvas id="chartMissing" height="180"></canvas></div>
+          <div class="chart-card">
+            <h3>Matched skills frequency</h3>
+            <div id="chartSkillsWrap"></div>
+          </div>
+          <div class="chart-card">
+            <h3>Top missing skills</h3>
+            <div id="chartMissingWrap"></div>
+          </div>
         </div>
         <div class="card" style="padding:18px;">
           <div class="tbl-header">
-            <h3>Candidate screening table</h3>
+            <div>
+              <h3>Candidate screening table</h3>
+              <div style="font-size:11px;color:#9ca3af;margin-top:2px;">Showing latest result per candidate — full history in History tab</div>
+            </div>
             <button class="dl-btn" onclick="downloadCSV()">Download CSV</button>
           </div>
           <div class="tbl-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Candidate</th>
-                  <th>Contact</th>
-                  <th>Score</th>
-                  <th>Matched skills</th>
-                  <th>Missing skills</th>
-                  <th>Status</th>
-                  <th>HR Remarks</th>
-                  <th>Resume</th>
-                  <th>Save</th>
+                  <th>#</th><th>Candidate</th><th>Contact</th><th>Score</th>
+                  <th>Matched skills</th><th>Missing skills</th>
+                  <th>Status</th><th>HR Remarks</th><th>Resume</th><th>Save</th>
                 </tr>
               </thead>
               <tbody id="dashTbody"></tbody>
@@ -257,7 +235,8 @@ table textarea{width:100%;padding:5px;border:1px solid #d1d5db;border-radius:4px
     <div class="wrap">
       <div class="card">
         <div style="margin-bottom:14px;">
-          <div style="font-size:14px;font-weight:500;margin-bottom:12px;">Upload history</div>
+          <div style="font-size:14px;font-weight:500;margin-bottom:4px;">Upload history</div>
+          <div style="font-size:12px;color:#6b7280;margin-bottom:12px;">All uploads across all sessions, including repeated candidates</div>
           <div class="hist-filter">
             <input type="text" id="histSearch" placeholder="Search by name..." oninput="filterHistory()"/>
             <select id="histVerdict" onchange="filterHistory()">
@@ -302,7 +281,6 @@ var token='',username='',selectedFiles=[],jdFile=null;
 var dashCandidates=[],histAll=[];
 var chartSkillsInst=null,chartMissingInst=null;
 
-// Auth tab
 function switchAuthTab(t){
   document.getElementById('loginForm').style.display=t==='login'?'block':'none';
   document.getElementById('regForm').style.display=t==='register'?'block':'none';
@@ -352,17 +330,14 @@ function enterApp(){
 }
 function logout(){window.location.reload();}
 
-// Page navigation
 function showPage(name){
   document.querySelectorAll('.pg').forEach(function(p){p.className='pg';});
-  document.getElementById('pg'+cap(name)).className='pg active';
+  document.getElementById('pg'+name.charAt(0).toUpperCase()+name.slice(1)).className='pg active';
   document.querySelectorAll('.tab-bar-inner button').forEach(function(b){b.className='';});
   document.getElementById('tab-'+name).className='active';
   window.scrollTo(0,0);
 }
-function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 
-// JD mode toggle
 function switchJD(mode){
   document.getElementById('jdTextArea').style.display=mode==='text'?'block':'none';
   document.getElementById('jdFileArea').style.display=mode==='file'?'block':'none';
@@ -370,25 +345,19 @@ function switchJD(mode){
   document.getElementById('jdFileBtn').className=mode==='file'?'active':'';
   jdFile=null;
 }
-function setJDFile(f){
-  jdFile=f;
-  document.getElementById('jdFileChosen').textContent=f?('Selected: '+f.name):'';
-}
+function setJDFile(f){jdFile=f;document.getElementById('jdFileChosen').textContent=f?('Selected: '+f.name):'';}
 
-// File handling
 function addFiles(files){
   for(var i=0;i<files.length;i++){
     if(selectedFiles.length>=20)break;
-    var f=files[i];
-    var ext=f.name.split('.').pop().toLowerCase();
+    var f=files[i],ext=f.name.split('.').pop().toLowerCase();
     if(['pdf','docx','doc'].indexOf(ext)===-1)continue;
     if(!selectedFiles.some(function(x){return x.name===f.name;}))selectedFiles.push(f);
   }
   renderFiles();
 }
 function renderFiles(){
-  var el=document.getElementById('fileList');
-  el.innerHTML=selectedFiles.map(function(f,i){
+  document.getElementById('fileList').innerHTML=selectedFiles.map(function(f,i){
     return '<div class="file-item"><span>'+esc(f.name)+'</span><button onclick="removeFile('+i+')">&#x2715;</button></div>';
   }).join('');
 }
@@ -396,10 +365,9 @@ function removeFile(i){selectedFiles.splice(i,1);renderFiles();}
 
 var dz=document.getElementById('dropZone');
 dz.addEventListener('dragover',function(e){e.preventDefault();dz.style.borderColor='#1d4ed8';});
-dz.addEventListener('dragleave',function(){dz.style.borderColor='#d1d5db';});
-dz.addEventListener('drop',function(e){e.preventDefault();dz.style.borderColor='#d1d5db';addFiles(e.dataTransfer.files);});
+dz.addEventListener('dragleave',function(){dz.style.borderColor='';});
+dz.addEventListener('drop',function(e){e.preventDefault();dz.style.borderColor='';addFiles(e.dataTransfer.files);});
 
-// Upload
 async function doUpload(){
   var usingFile=document.getElementById('jdFileArea').style.display==='block';
   var jdText=document.getElementById('jdText').value.trim();
@@ -420,7 +388,7 @@ async function doUpload(){
     document.getElementById('progFill').style.width='90%';
     var d=await r.json();
     if(!r.ok){
-      if(r.status===401){showErr('uploadErr','Session expired. Log out and log in again.');return;}
+      if(r.status===401){showErr('uploadErr','Session expired. Please log out and log in again.');return;}
       showErr('uploadErr',d.error||'Upload failed.');return;
     }
     document.getElementById('progFill').style.width='100%';
@@ -428,21 +396,39 @@ async function doUpload(){
     document.getElementById('jdText').value='';
     jdFile=null;document.getElementById('jdFileChosen').textContent='';
     showPage('dashboard');loadDashboard();
-  }catch(e){showErr('uploadErr','Could not reach server. Check your connection.');}
+  }catch(e){showErr('uploadErr','Could not reach server.');}
   finally{
     btn.disabled=false;btn.textContent='Analyse resumes';
     setTimeout(function(){document.getElementById('progBar').style.display='none';document.getElementById('progFill').style.width='0';},800);
   }
 }
 
-// Dashboard
+// Deduplicate: keep only the MOST RECENT entry per candidate name.
+// The /api/candidates/ endpoint returns results ordered by '-id' (newest first),
+// so the first time we see a name is always its most recent upload.
+// Older re-uploads of the same name (even if scored higher) are skipped here —
+// they still show up in the History tab, which lists everything unfiltered.
+function deduplicate(candidates){
+  var seen={};
+  var order=[];
+  candidates.forEach(function(c){
+    var key=(c.name||'').toLowerCase().trim();
+    if(!seen[key]){
+      seen[key]=c;
+      order.push(key);
+    }
+  });
+  return order.map(function(k){return seen[k];}).sort(function(a,b){return b.score-a.score;});
+}
+
 async function loadDashboard(){
   try{
     var r1=await fetch(API+'/api/candidates/',{headers:{'Authorization':'Bearer '+token}});
-    var r2=await fetch(API+'/api/dashboard-analytics/',{headers:{'Authorization':'Bearer '+token}});
-    if(!r1.ok){if(r1.status===401){alert('Session expired. Please log in again.');logout();}return;}
-    var candidates=await r1.json();
-    var analytics=r2.ok?(await r2.json()):{skills_coverage:{},top_missing_skills:{}};
+    if(!r1.ok){if(r1.status===401){alert('Session expired.');logout();}return;}
+    var all=await r1.json();
+
+    // Deduplicate — show only the most recent upload per candidate name
+    var candidates=deduplicate(all);
     dashCandidates=candidates;
 
     if(!candidates.length){
@@ -456,53 +442,52 @@ async function loadDashboard(){
     var total=candidates.length;
     var avg=(candidates.reduce(function(s,c){return s+c.score;},0)/total).toFixed(1);
     var sl=candidates.filter(function(c){return c.score>=60;}).length;
-    var rv=total-sl;
     document.getElementById('dashStats').innerHTML=
-      stat('Total',total)+stat('Avg score',avg+'%')+stat('Shortlisted',sl)+stat('Under review',rv);
+      stat('Unique candidates',total)+stat('Avg score',avg+'%')+stat('Shortlisted',sl)+stat('Under review',total-sl);
 
-    renderCharts(analytics,candidates);
+    renderCharts(candidates);
     renderTable(candidates);
   }catch(e){console.error('Dashboard error:',e);}
 }
 
 function stat(l,v){return '<div class="stat"><div class="lbl">'+l+'</div><div class="val">'+v+'</div></div>';}
 
-function renderCharts(analytics,candidates){
+function renderCharts(candidates){
   if(chartSkillsInst){chartSkillsInst.destroy();chartSkillsInst=null;}
   if(chartMissingInst){chartMissingInst.destroy();chartMissingInst=null;}
 
-  // Build from candidates directly if analytics empty
-  var scData=analytics.skills_coverage||{};
-  var mcData=analytics.top_missing_skills||{};
+  var sc={},mc={};
+  candidates.forEach(function(c){
+    (c.matched_skills||[]).forEach(function(s){sc[s]=(sc[s]||0)+1;});
+    (c.missing_skills||[]).forEach(function(s){mc[s]=(mc[s]||0)+1;});
+  });
 
-  // Fallback: aggregate from candidates
-  if(!Object.keys(scData).length){
-    var sc={},mc={};
-    candidates.forEach(function(c){
-      (c.matched_skills||[]).forEach(function(s){sc[s]=(sc[s]||0)+1;});
-      (c.missing_skills||[]).forEach(function(s){mc[s]=(mc[s]||0)+1;});
-    });
-    // top 10
-    scData=topN(sc,10);
-    mcData=topN(mc,10);
-  }
+  var scTop=topN(sc,10);
+  var mcTop=topN(mc,10);
 
-  var blueShades=['#1d4ed8','#2563eb','#3b82f6','#60a5fa','#93c5fd','#bfdbfe','#1e40af','#1e3a8a','#172554','#4b5563'];
+  var swrap=document.getElementById('chartSkillsWrap');
+  var mwrap=document.getElementById('chartMissingWrap');
 
-  if(Object.keys(scData).length){
+  if(Object.keys(scTop).length){
+    swrap.innerHTML='<canvas id="chartSkills" height="180"></canvas>';
     chartSkillsInst=new Chart(document.getElementById('chartSkills').getContext('2d'),{
       type:'bar',
-      data:{labels:Object.keys(scData),datasets:[{data:Object.values(scData),backgroundColor:'#3b82f6',borderRadius:4}]},
+      data:{labels:Object.keys(scTop),datasets:[{data:Object.values(scTop),backgroundColor:'#3b82f6',borderRadius:4}]},
       options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1,precision:0}}}}
     });
+  }else{
+    swrap.innerHTML='<div class="no-chart">No matched skills data yet.<br>Upload resumes against a specific JD to see skill coverage.</div>';
   }
 
-  if(Object.keys(mcData).length){
+  if(Object.keys(mcTop).length){
+    mwrap.innerHTML='<canvas id="chartMissing" height="180"></canvas>';
     chartMissingInst=new Chart(document.getElementById('chartMissing').getContext('2d'),{
       type:'bar',
-      data:{labels:Object.keys(mcData),datasets:[{data:Object.values(mcData),backgroundColor:'#6b7280',borderRadius:4}]},
+      data:{labels:Object.keys(mcTop),datasets:[{data:Object.values(mcTop),backgroundColor:'#6b7280',borderRadius:4}]},
       options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1,precision:0}}}}
     });
+  }else{
+    mwrap.innerHTML='<div class="no-chart">No missing skills data yet.</div>';
   }
 }
 
@@ -511,41 +496,31 @@ function topN(obj,n){
 }
 
 function renderTable(candidates){
-  var tbody=document.getElementById('dashTbody');
-  tbody.innerHTML=candidates.map(function(c,i){
+  document.getElementById('dashTbody').innerHTML=candidates.map(function(c,i){
     var contact=c.contact||{};
-    var contactHtml='<div class="contact-cell">';
-    if(contact.email)contactHtml+='<div>'+esc(contact.email)+'</div>';
-    if(contact.phone)contactHtml+='<div>'+esc(contact.phone)+'</div>';
-    if(contact.linkedin_url)contactHtml+='<div><a href="'+esc(contact.linkedin_url)+'" target="_blank">LinkedIn</a></div>';
-    if(!contact.email&&!contact.phone&&!contact.linkedin_url)contactHtml+='<span style="color:#d1d5db;">—</span>';
-    contactHtml+='</div>';
-
+    var ch='<div class="contact-cell">';
+    if(contact.email)ch+='<div>'+esc(contact.email)+'</div>';
+    if(contact.phone)ch+='<div>'+esc(contact.phone)+'</div>';
+    if(contact.linkedin_url)ch+='<div><a href="'+esc(contact.linkedin_url)+'" target="_blank">LinkedIn</a></div>';
+    if(!contact.email&&!contact.phone&&!contact.linkedin_url)ch+='<span style="color:#d1d5db;">—</span>';
+    ch+='</div>';
     var high=c.score>=60;
-    var matchedSkills=c.matched_skills||[];
-    var missingSkills=c.missing_skills||[];
-    var matchedHtml=matchedSkills.length
-      ?matchedSkills.map(function(s){return '<span class="skill-tag sk-m">'+esc(s)+'</span>';}).join('')
-      :'<span style="color:#d1d5db;font-size:11px;">None</span>';
-    var missingHtml=missingSkills.length
-      ?missingSkills.map(function(s){return '<span class="skill-tag sk-x">'+esc(s)+'</span>';}).join('')
-      :'<span style="color:#d1d5db;font-size:11px;">None</span>';
-
-    var resumeLink=c.resume_url?'<a href="'+esc(c.resume_url)+'" target="_blank" style="color:#1d4ed8;font-size:12px;">View</a>':'—';
-
+    var ms=c.matched_skills||[];
+    var xs=c.missing_skills||[];
+    var mh=ms.length?ms.map(function(s){return '<span class="skill-tag sk-m">'+esc(s)+'</span>';}).join(''):'<span style="color:#d1d5db;font-size:11px;">—</span>';
+    var xh=xs.length?xs.map(function(s){return '<span class="skill-tag sk-x">'+esc(s)+'</span>';}).join(''):'<span style="color:#d1d5db;font-size:11px;">—</span>';
+    var rl=c.resume_url?'<a href="'+esc(c.resume_url)+'" target="_blank" style="color:#1d4ed8;font-size:12px;">View</a>':'—';
     return '<tr>'+
       '<td style="color:#9ca3af;font-size:11px;">'+(i+1)+'</td>'+
       '<td style="min-width:160px;"><div style="font-weight:500;font-size:13px;">'+esc(c.name||'')+'</div><div class="reasoning">'+esc(c.ai_reasoning||'')+'</div></td>'+
-      '<td style="min-width:160px;">'+contactHtml+'</td>'+
-      '<td style="min-width:80px;"><div class="'+(high?'score-high':'score-low')+'">'+c.score.toFixed(1)+'%</div><div><span class="'+(high?'verdict-sl':'verdict-rv')+'">'+(high?'Shortlist':'Review')+'</span></div></td>'+
-      '<td style="min-width:140px;">'+matchedHtml+'</td>'+
-      '<td style="min-width:140px;">'+missingHtml+'</td>'+
-      '<td style="min-width:130px;"><select id="st-'+c.id+'">'+
-        ['New','Shortlisted','Under Review','Rejected'].map(function(s){return '<option value="'+s+'"'+(c.status===s?' selected':'')+'>'+s+'</option>';}).join('')+
-      '</select></td>'+
+      '<td style="min-width:160px;">'+ch+'</td>'+
+      '<td style="min-width:80px;"><div class="'+(high?'score-high':'score-low')+'">'+c.score.toFixed(1)+'%</div><span class="'+(high?'verdict-sl':'verdict-rv')+'">'+(high?'Shortlist':'Review')+'</span></td>'+
+      '<td style="min-width:150px;">'+mh+'</td>'+
+      '<td style="min-width:150px;">'+xh+'</td>'+
+      '<td style="min-width:130px;"><select id="st-'+c.id+'">'+['New','Shortlisted','Under Review','Rejected'].map(function(s){return '<option value="'+s+'"'+(c.status===s?' selected':'')+'>'+s+'</option>';}).join('')+'</select></td>'+
       '<td style="min-width:160px;"><textarea id="rm-'+c.id+'" placeholder="Add remarks...">'+esc(c.remarks||'')+'</textarea></td>'+
-      '<td>'+resumeLink+'</td>'+
-      '<td><button class="save-btn" id="savebtn-'+c.id+'" onclick="saveStatus('+c.id+')">Save</button></td>'+
+      '<td>'+rl+'</td>'+
+      '<td><button class="save-btn" id="sb-'+c.id+'" onclick="saveStatus('+c.id+')">Save</button></td>'+
     '</tr>';
   }).join('');
 }
@@ -553,18 +528,15 @@ function renderTable(candidates){
 async function saveStatus(id){
   var st=document.getElementById('st-'+id).value;
   var rm=document.getElementById('rm-'+id).value;
-  var btn=document.getElementById('savebtn-'+id);
+  var btn=document.getElementById('sb-'+id);
   btn.textContent='Saving...';btn.disabled=true;
   try{
     var r=await fetch(API+'/api/candidates/'+id+'/update_status/',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
       body:JSON.stringify({status:st,remarks:rm})
     });
-    if(r.ok){
-      btn.textContent='Saved';btn.className='save-btn saved';
-      setTimeout(function(){btn.textContent='Save';btn.className='save-btn';btn.disabled=false;},1500);
-    }else{btn.textContent='Error';btn.disabled=false;}
+    if(r.ok){btn.textContent='Saved';btn.className='save-btn saved';setTimeout(function(){btn.textContent='Save';btn.className='save-btn';btn.disabled=false;},1500);}
+    else{btn.textContent='Error';btn.disabled=false;}
   }catch(e){btn.textContent='Error';btn.disabled=false;}
 }
 
@@ -573,24 +545,21 @@ function downloadCSV(){
   var rows=[['#','Name','Score','Verdict','Status','Email','Phone','LinkedIn','Matched skills','Missing skills','AI Reasoning','Remarks']];
   dashCandidates.forEach(function(c,i){
     var ct=c.contact||{};
-    rows.push([
-      i+1,c.name||'',c.score,c.score>=60?'Shortlist':'Review',
-      c.status||'New',ct.email||'',ct.phone||'',ct.linkedin_url||'',
+    rows.push([i+1,c.name||'',c.score,c.score>=60?'Shortlist':'Review',c.status||'New',
+      ct.email||'',ct.phone||'',ct.linkedin_url||'',
       (c.matched_skills||[]).join('; '),(c.missing_skills||[]).join('; '),
-      c.ai_reasoning||'',c.remarks||''
-    ]);
+      c.ai_reasoning||'',c.remarks||'']);
   });
   var csv=rows.map(function(r){return r.map(function(f){return '"'+String(f).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
   var blob=new Blob([csv],{type:'text/csv'});
   var url=URL.createObjectURL(blob);
   var a=document.createElement('a');
-  a.href=url;
-  a.download=username+'_ats_results_'+new Date().toISOString().slice(0,10)+'.csv';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  a.href=url;a.download=username+'_ats_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
 
-// History
+// History — shows ALL uploads including duplicates
+var histAll=[];
 async function loadHistory(){
   document.getElementById('histLoading').style.display='block';
   document.getElementById('histEmpty').style.display='none';
@@ -604,10 +573,7 @@ async function loadHistory(){
     if(!histAll.length){document.getElementById('histEmpty').style.display='block';return;}
     document.getElementById('histContent').style.display='block';
     renderHistory();
-  }catch(e){
-    document.getElementById('histLoading').style.display='none';
-    document.getElementById('histEmpty').style.display='block';
-  }
+  }catch(e){document.getElementById('histLoading').style.display='none';document.getElementById('histEmpty').style.display='block';}
 }
 
 function filterHistory(){renderHistory();}
@@ -622,43 +588,34 @@ function renderHistory(){
            (!statFilter||(c.status||'New')===statFilter);
   });
   var tbody=document.getElementById('histTbody');
-  if(!filtered.length){
-    tbody.innerHTML='<tr><td colspan="9" style="text-align:center;color:#9ca3af;padding:24px;">No records match the filters.</td></tr>';
-    return;
-  }
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;color:#9ca3af;padding:24px;">No records match the filters.</td></tr>';return;}
   tbody.innerHTML=filtered.map(function(c,i){
     var ct=c.contact||{};
-    var contactHtml='<div class="contact-cell">';
-    if(ct.email)contactHtml+='<div>'+esc(ct.email)+'</div>';
-    if(ct.phone)contactHtml+='<div>'+esc(ct.phone)+'</div>';
-    if(ct.linkedin_url)contactHtml+='<div><a href="'+esc(ct.linkedin_url)+'" target="_blank">LinkedIn</a></div>';
-    if(!ct.email&&!ct.phone&&!ct.linkedin_url)contactHtml+='<span style="color:#d1d5db;">—</span>';
-    contactHtml+='</div>';
+    var ch='<div class="contact-cell">';
+    if(ct.email)ch+='<div>'+esc(ct.email)+'</div>';
+    if(ct.phone)ch+='<div>'+esc(ct.phone)+'</div>';
+    if(ct.linkedin_url)ch+='<div><a href="'+esc(ct.linkedin_url)+'" target="_blank">LinkedIn</a></div>';
+    if(!ct.email&&!ct.phone&&!ct.linkedin_url)ch+='<span style="color:#d1d5db;">—</span>';
+    ch+='</div>';
     var high=c.score>=60;
     var dt=c.analyzed_at?new Date(c.analyzed_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}):'—';
-    var matchedHtml=(c.matched_keywords||[]).length
-      ?(c.matched_keywords||[]).map(function(s){return '<span class="skill-tag sk-m">'+esc(s)+'</span>';}).join('')
-      :'<span style="color:#d1d5db;font-size:11px;">—</span>';
-    var missingHtml=(c.missing_keywords||[]).length
-      ?(c.missing_keywords||[]).map(function(s){return '<span class="skill-tag sk-x">'+esc(s)+'</span>';}).join('')
-      :'<span style="color:#d1d5db;font-size:11px;">—</span>';
+    var mh=(c.matched_keywords||[]).length?(c.matched_keywords||[]).map(function(s){return '<span class="skill-tag sk-m">'+esc(s)+'</span>';}).join(''):'<span style="color:#d1d5db;font-size:11px;">—</span>';
+    var xh=(c.missing_keywords||[]).length?(c.missing_keywords||[]).map(function(s){return '<span class="skill-tag sk-x">'+esc(s)+'</span>';}).join(''):'<span style="color:#d1d5db;font-size:11px;">—</span>';
     return '<tr>'+
       '<td style="color:#9ca3af;font-size:11px;">'+(i+1)+'</td>'+
       '<td style="font-weight:500;font-size:13px;">'+esc(c.name||'')+'</td>'+
-      '<td>'+contactHtml+'</td>'+
+      '<td>'+ch+'</td>'+
       '<td><div class="'+(high?'score-high':'score-low')+'">'+c.score.toFixed(1)+'%</div></td>'+
       '<td><span class="'+(high?'verdict-sl':'verdict-rv')+'">'+esc(c.verdict||'')+'</span></td>'+
-      '<td><span style="font-size:11px;color:#374151;">'+esc(c.status||'New')+'</span></td>'+
+      '<td style="font-size:11px;">'+esc(c.status||'New')+'</td>'+
       '<td style="font-size:11px;color:#6b7280;white-space:nowrap;">'+dt+'</td>'+
-      '<td>'+matchedHtml+'</td>'+
-      '<td>'+missingHtml+'</td>'+
+      '<td>'+mh+'</td>'+
+      '<td>'+xh+'</td>'+
     '</tr>';
   }).join('');
 }
 
-function esc(s){
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 </script>
 </body>
 </html>
