@@ -198,7 +198,7 @@ table textarea{width:100%;padding:5px;border:1px solid #d1d5db;border-radius:4px
         <div class="stats-row" id="dashStats"></div>
         <div class="chart-card" style="margin-bottom:16px;">
           <h3>Skill gap overview</h3>
-          <div style="font-size:11px;color:#9ca3af;margin-top:-8px;margin-bottom:14px;">For each skill: how many candidates have it (blue) vs. are missing it (grey)</div>
+          <div style="font-size:11px;color:#9ca3af;margin-top:-8px;margin-bottom:14px;">For each skill: how many candidates have it (blue) vs. are missing it (grey) — hover a bar to see names</div>
           <div id="chartSkillsWrap"></div>
         </div>
         <div class="card" style="padding:18px;">
@@ -460,17 +460,24 @@ function renderCharts(candidates){
   if(chartSkillsInst){chartSkillsInst.destroy();chartSkillsInst=null;}
   if(chartMissingInst){chartMissingInst.destroy();chartMissingInst=null;}
 
-  var sc={},mc={};
+  var sc={},mc={},scNames={},mcNames={};
   candidates.forEach(function(c){
-    (c.matched_skills||[]).forEach(function(s){sc[s]=(sc[s]||0)+1;});
-    (c.missing_skills||[]).forEach(function(s){mc[s]=(mc[s]||0)+1;});
+    var shortName=(c.name||'').split('_')[0].trim(); // just the person's name, not the full filename
+    (c.matched_skills||[]).forEach(function(s){
+      sc[s]=(sc[s]||0)+1;
+      (scNames[s]=scNames[s]||[]).push(shortName);
+    });
+    (c.missing_skills||[]).forEach(function(s){
+      mc[s]=(mc[s]||0)+1;
+      (mcNames[s]=mcNames[s]||[]).push(shortName);
+    });
   });
 
   // Combine into one row per skill: matched count + missing count
   var allSkills=Array.from(new Set(Object.keys(sc).concat(Object.keys(mc))));
   var rows=allSkills.map(function(s){
     var m=sc[s]||0,x=mc[s]||0;
-    return {skill:s,matched:m,missing:x,total:m+x};
+    return {skill:s,matched:m,missing:x,total:m+x,matchedNames:scNames[s]||[],missingNames:mcNames[s]||[]};
   });
   // Show skills with the biggest gaps first (most missing), then most matched
   rows.sort(function(a,b){return b.missing-a.missing || b.matched-a.matched;});
@@ -485,8 +492,8 @@ function renderCharts(candidates){
       data:{
         labels:rows.map(function(r){return r.skill;}),
         datasets:[
-          {label:'Have this skill',data:rows.map(function(r){return r.matched;}),backgroundColor:'#3b82f6',borderRadius:3},
-          {label:'Missing this skill',data:rows.map(function(r){return r.missing;}),backgroundColor:'#d1d5db',borderRadius:3}
+          {label:'Have this skill',data:rows.map(function(r){return r.matched;}),backgroundColor:'#3b82f6',borderRadius:3,names:rows.map(function(r){return r.matchedNames;})},
+          {label:'Missing this skill',data:rows.map(function(r){return r.missing;}),backgroundColor:'#d1d5db',borderRadius:3,names:rows.map(function(r){return r.missingNames;})}
         ]
       },
       options:{
@@ -494,7 +501,17 @@ function renderCharts(candidates){
         responsive:true,
         plugins:{
           legend:{display:true,position:'top',align:'end',labels:{boxWidth:12,font:{size:11}}},
-          tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.raw+' candidate(s)';}}}
+          tooltip:{
+            callbacks:{
+              label:function(ctx){
+                return ctx.dataset.label+': '+ctx.raw+' candidate(s)';
+              },
+              afterLabel:function(ctx){
+                var names=ctx.dataset.names[ctx.dataIndex]||[];
+                return names.length?names.join(', '):'';
+              }
+            }
+          }
         },
         scales:{
           x:{stacked:true,beginAtZero:true,ticks:{stepSize:1,precision:0}},
