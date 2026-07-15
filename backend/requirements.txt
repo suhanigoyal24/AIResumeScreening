@@ -2,6 +2,7 @@
 Django>=4.2
 djangorestframework>=3.14
 django-cors-headers>=4.3
+djangorestframework-simplejwt==5.5.1
 
 # ML & Data Science
 pandas>=2.0
@@ -26,3 +27,5 @@ PyMySQL>=1.1
 python-dotenv
 mysqlclient
 gunicorn
+sentence-transformers==3.0.1
+pydantic==2.9.2

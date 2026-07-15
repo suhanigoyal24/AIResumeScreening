@@ -181,6 +181,38 @@ def _generate_recommendations(missing_skills: list, exp_score: float, edu_score:
         recs.append("Tailor resume to emphasize matched keywords from job description")
     return recs
 
+def extract_contact_info(text: str) -> dict:
+    """Extract email, phone number, and LinkedIn URL from resume text using regex."""
+    if not text:
+        return {"email": "", "phone": "", "linkedin_url": ""}
+
+    # Email
+    email_match = re.search(r'[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}', text)
+    email = email_match.group(0) if email_match else ""
+
+    # Phone (handles +91, dashes, spaces, parentheses, 10-15 digit numbers)
+    phone_match = re.search(
+        r'(?:(?:\+?\d{1,3}[\s\-]?)?(?:\(?\d{2,4}\)?[\s\-]?)?\d{3,4}[\s\-]?\d{3,4}[\s\-]?\d{0,4})',
+        text
+    )
+    phone = ""
+    if phone_match:
+        candidate = phone_match.group(0).strip()
+        digits_only = re.sub(r'\D', '', candidate)
+        if 10 <= len(digits_only) <= 13:
+            phone = candidate
+
+    # LinkedIn URL
+    linkedin_match = re.search(
+        r'(?:https?://)?(?:www\.)?linkedin\.com/in/[a-zA-Z0-9\-_/]+',
+        text, re.IGNORECASE
+    )
+    linkedin_url = linkedin_match.group(0) if linkedin_match else ""
+    if linkedin_url and not linkedin_url.startswith('http'):
+        linkedin_url = 'https://' + linkedin_url
+
+    return {"email": email, "phone": phone, "linkedin_url": linkedin_url}
+
 # Explicit exports - prevents circular import issues
 __all__ = [
     'nlp',
@@ -189,6 +221,7 @@ __all__ = [
     'extract_text_from_file',
     'clean_text',
     'extract_skills', 
+    'extract_contact_info',
     'calculate_weighted_score',
     '_generate_strengths',
     '_generate_weaknesses',
