@@ -1,4 +1,4 @@
-# analyzer/utils.py
+﻿# analyzer/utils.py
 import re, os, joblib, spacy, pdfplumber, docx, string
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -54,27 +54,17 @@ def clean_text(text: str) -> str:
     return " ".join(tokens)
 
 def extract_skills(text: str) -> list:
-    """Extract skills using keyword matching + basic NER"""
+    """Extract skills using curated keyword matching only, no NER guessing"""
     if not text:
         return []
-    
+
     text_lower = text.lower()
     found_skills = set()
-    
-    # 1. Keyword matching
+
     for skill in SKILL_KEYWORDS:
         if skill in text_lower:
             found_skills.add(skill)
-    
-    # 2. Optional: spaCy NER for organizations/products that might be skills
-    doc = nlp(text)
-    for ent in doc.ents:
-        if ent.label_ in ["PRODUCT", "ORG"] and 2 <= len(ent.text.split()) <= 4:
-            candidate = ent.text.lower().strip()
-            # Avoid adding generic terms
-            if candidate not in STOPWORDS and candidate not in ['university', 'college', 'company']:
-                found_skills.add(candidate)
-    
+
     return sorted(list(found_skills))
 
 def calculate_weighted_score(resume_text: str, job_text: str, resume_skills: list, job_skills: list, resume_doc=None, job_doc=None) -> dict:
